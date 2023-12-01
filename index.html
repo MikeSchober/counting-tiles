@@ -16,7 +16,130 @@
 
 <body>
 
+    <!--header holds game title and an about link-->
+    <header>
+        <h1>JavaScript Game!</h1>
+        <a href="url">ABOUT</a>
+    </header>
 
+    <!--container to hold the elements in the UI-->
+    <div class="container">
+
+        <!--header over the gameboard container to hold score at the top of the gameboard... will need to be justified over the gameboard-->
+        <header>
+            <h3 class="score">Current score: </h3>
+        </header>
+
+        <!--gameplay container to hold all gameplay elements... gameboard, current tile, extras (will be flex column display)-->
+        <div class="gameplay">
+
+            <!--container to hold the gamebaord grid (grid of divs)-->
+            <div class="gameboard">
+
+                <!--gameboard is 7 rows x 6 columns + row totals column-->
+                <div class="row" id="row1">
+                    <div class="cell" id="[0,0]"></div>
+                    <div class="cell" id="[0,1]"></div>
+                    <div class="cell" id="[0,2]"></div>
+                    <div class="cell" id="[0,3]"></div>
+                    <div class="cell" id="[0,4]"></div>
+                    <div class="cell" id="[0,5]"></div>
+                    <div class="rowTotal" id="t0"></div>
+                </div>
+                <div class="row" id="row2">
+                    <div class="cell" id="[1,0]"></div>
+                    <div class="cell" id="[1,1]"></div>
+                    <div class="cell" id="[1,2]"></div>
+                    <div class="cell" id="[1,3]"></div>
+                    <div class="cell" id="[1,4]"></div>
+                    <div class="cell" id="[1,5]"></div>
+                    <div class="rowTotal" id="t1"></div>
+                </div>
+                <div class="row" id="row3">
+                    <div class="cell" id="[2,0]"></div>
+                    <div class="cell" id="[2,1]"></div>
+                    <div class="cell" id="[2,2]"></div>
+                    <div class="cell" id="[2,3]"></div>
+                    <div class="cell" id="[2,4]"></div>
+                    <div class="cell" id="[2,5]"></div>
+                    <div class="rowTotal" id="t2"></div>
+                </div>
+                <div class="row" id="row4">
+                    <div class="cell" id="[3,0]"></div>
+                    <div class="cell" id="[3,1]"></div>
+                    <div class="cell" id="[3,2]"></div>
+                    <div class="cell" id="[3,3]"></div>
+                    <div class="cell" id="[3,4]"></div>
+                    <div class="cell" id="[3,5]"></div>
+                    <div class="rowTotal" id="t3"></div>
+                </div>
+                <div class="row" id="row5">
+                    <div class="cell" id="[4,0]"></div>
+                    <div class="cell" id="[4,1]"></div>
+                    <div class="cell" id="[4,2]"></div>
+                    <div class="cell" id="[4,3]"></div>
+                    <div class="cell" id="[4,4]"></div>
+                    <div class="cell" id="[4,5]"></div>
+                    <div class="rowTotal" id="t4"></div>
+                </div>
+                <div class="row" id="row6">
+                    <div class="cell" id="[5,0]"></div>
+                    <div class="cell" id="[5,1]"></div>
+                    <div class="cell" id="[5,2]"></div>
+                    <div class="cell" id="[5,3]"></div>
+                    <div class="cell" id="[5,4]"></div>
+                    <div class="cell" id="[5,5]"></div>
+                    <div class="rowTotal" id="t5"></div>
+                </div>
+                <div class="row" id="row7">
+                    <div class="cell" id="[6,0]"></div>
+                    <div class="cell" id="[6,1]"></div>
+                    <div class="cell" id="[6,2]"></div>
+                    <div class="cell" id="[6,3]"></div>
+                    <div class="cell" id="[6,4]"></div>
+                    <div class="cell" id="[6,5]"></div>
+                    <div class="rowTotal" id="t6"></div>
+                </div>
+
+
+            </div>
+
+            <!--container to hold the current tile and psbl actions-->
+            <div class="play">
+
+                <!--container to hold image of current tile-->
+                <div class="currTile">
+
+                </div>
+
+                <!--container to hold image of psbl actions-->
+                <div class="psblActions">
+
+                </div>
+
+
+            </div>
+
+            <!--container to hold the tile numbers and point values cheat sheet image-->
+            <div class="extra">
+
+                <!--container for the number of tiles placed, etc.-->
+                <div class="tileNums">
+
+
+                </div>
+
+                <!--container for the point values cheat sheet image-->
+                <div class="ptValues">
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
 
 
 </body>
