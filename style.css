@@ -1,0 +1,70 @@
+/*universal selector*/
+* {
+    /*resetting margins and padding*/
+    margin: 0;
+    padding: 0;
+
+    /*includes margin and padding in sizing of elements*/
+    box-sizing: border-box;
+}
+
+
+
+.hidden {
+    display: none;
+}
+
+
+
+html {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.9)), url('images/LaptopTrans2.png');
+    /* background: url('images/LaptopTrans2.png'); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow: hidden;
+}
+
+
+header {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-between;
+    border: 2px solid black;
+    height: 10%;
+    width: 90%;
+    color: black;
+    margin: 10px auto;
+}
+
+/*links as buttons*/
+header a:link {
+    color: black;
+    font-family: 'Londrina Sketch', cursive;
+    font-size: 17px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    padding: 10px 10px;
+    margin-top: 3px;
+}
+
+header a:visited {
+    color: black;
+    text-decoration: none;
+}
+
+header a:hover {
+    color: #F2F1E8;
+    text-decoration: none;
+    background-color: #4C5D70;
+
+}
+
+header a:active {
+    color: #4C5D70;
+    text-decoration: none;
+    background-color: #E34234;
+}
