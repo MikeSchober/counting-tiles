@@ -10,12 +10,6 @@
 
 
 
-.hidden {
-    display: none;
-}
-
-
-
 html {
     background: #f3eec4;
     background-size: cover;
@@ -71,11 +65,15 @@ header a:active {
 .gameplay {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     align-items: center;
+    align-content: flex-start;
+    margin: 0px 100px;
 
 }
 
+
+/*GAMEBOARD STYLING*/
 
 /*using css grid for gameboard as whole, flex for elements within it*/
 .gameboard {
@@ -103,4 +101,66 @@ header a:active {
     width: 160px;
     height: 80px;
 
+}
+
+
+/*END GAMEBAORD STYLING*/
+
+
+/*CURRENT TILE AND PSBL ACTIONS STLYING*/
+
+.play {
+    align-self: flex-start;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+
+.currTile {
+    border: 2px solid black;
+    height: 300px;
+    width: 300px;
+    margin-bottom: 20px;
+
+}
+
+
+.psblActions {
+    border: 1px solid black;
+}
+
+/*END CURR TILE AND PSBL ACTIONS STYLE*/
+
+
+
+/*TILE NUMS AND POINT SHEET STLYING*/
+
+.extra {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.tileNums {
+    border: 2px solid black;
+    height: 200px;
+    width: 400px;
+    margin-bottom: 20px;
+
+}
+
+
+.ptValues {
+    border: 1px solid black;
+}
+
+/*END TILE NUMS AND POINT SHEET STYLE*/
+
+
+.hidden {
+    display: none;
 }
