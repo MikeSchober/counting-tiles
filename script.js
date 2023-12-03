@@ -18,6 +18,9 @@ let rowSums;
 //holds the gameboard tile object matrix
 let gameTiles;
 
+//holds the chosen index of the current tile object (the drawn tile)
+let currTileInd;
+
 //holds current tile object
 let currTile;
 
@@ -27,11 +30,17 @@ let sequences = new Map();
 //holds all available tiles (array)
 let allTiles;
 
+//holds the total number of tiles created a game initiation
+let tileNums;
+
 //holds number of discarded tiles (number)
 let discarded;
 
 //holds number of placed tiles (number)
-let placed;
+let placed = 0;
+
+//holds the number of tiles remaining to be drawn
+let remaining;
 
 //holds id of user-clicked gameboard space
 let space;
@@ -46,8 +55,6 @@ let space;
 //event listener for general click
 //toSelect() callback function uses event.target to get the id from the clicked element and, if it is a <TH> element, displays a modal to show that column's taf data
 document.addEventListener('click', toSelect);
-
-
 
 
 ///////
@@ -104,7 +111,7 @@ function toSelect(event) {
         space = element.id;
 
         //placing the currTile on the clicked space on the gameboard
-        let placeTile = `<img src="${currTile.image}" alt="CURRENT TILE" class="pTile">`;
+        let placeTile = `<img src="${currTile.image}" alt="CURRENT TILE" draggable="true" ondragstart="drag(event)" class="pTile" id="tile${currTile.id}">`;
         element.insertAdjacentHTML("afterbegin", placeTile);
 
         //updating the gameboard tile values matrix
@@ -119,15 +126,32 @@ function toSelect(event) {
         //displaying the row sums in the UI
         showSums(rowSums);
 
+        //updating the placed tile counter
+        placed++;
+        console.log(`number of placed tiles: ${placed}`);
+
+        //updating the discarded tile count
+        discarded = tileNums - (allTiles.length + placed);
+        console.log(`discarded: ${discarded}`);
+
         //removing the currTile from the current tile display so that the next tile can be shown
         curr.removeChild(curr.firstChild);
 
+        //next random tile index chosen
+        currTileInd = drawIndex(allTiles.length);
+
         //next tile drawn
-        currTile = allTiles[drawIndex(allTiles.length)];
+        currTile = allTiles[currTileInd];
+
+        //removing the drawn tile from the tile bag
+        allTiles = rmvTile(allTiles, currTileInd);
 
         //displaying the next tile
         dispTile();
 
+        //total number of remaining tiles to be drawn is updated
+        remaining = allTiles.length;
+        console.log(`tiles remaining to be drawn: ${remaining}`);
 
     }
 };
@@ -201,7 +225,21 @@ function dispTile() {
 
 };
 
-//testing my randon number logic...
+
+//removes drawn tile from the tile bag
+//takes the allTiles array and the index of the drawn tile as arg (number)
+function rmvTile(tls, tileInd) {
+
+    //using the splile method to remove the chosen index from the tile bag
+    tls.splice(tileInd, 1);
+
+    //returns an updated array with th drawn tile removed
+    return tls;
+};
+
+
+
+//testing my random number logic...
 /*
 let inc = 0;
 
@@ -325,6 +363,32 @@ function showSums(theSums) {
 };
 
 
+///
+//functions for moving and combining tiles
+
+//function to be executed when a tile img is grabbed and begins moving
+function drag(e) {
+
+    console.log(`event target id: ${e.target.id}`);
+    e.dataTransfer.setData("text", e.target.id)
+
+};
+
+//function to enable the slide
+function allowDrop(e) {
+    e.preventDefault()
+
+};
+
+//function to execute the slide
+function drop(e) {
+    e.preventDefault();
+    let d = e.dataTransfer.getData("text");
+    e.target.appendChild(document.getElementById(d));
+
+};
+
+
 ///////
 
 
@@ -335,6 +399,9 @@ function showSums(theSums) {
 
 //tile bag created
 allTiles = genTiles([14, 14, 4, 4, 4, 5, 5, 14, 14]);
+
+//total number of generated tiles is stored (number)
+tileNums = allTiles.length;
 
 //creating the gameboard tile values matrix (default is 7 rows, 6 cols)
 gameboard = makeMatrix(7, 6);
@@ -355,11 +422,23 @@ showSums(rowSums);
 ///////
 //GAMEPLAY
 
+//presenting the discarded tile count at zero
+discarded = tileNums - (allTiles.length + placed);
+
+//random tile index chosen
+currTileInd = drawIndex(allTiles.length);
+
 //current tile drawn
-currTile = allTiles[drawIndex(allTiles.length)];
+currTile = allTiles[currTileInd];
+
+//removing the drawn tile (current tile) from the tile bag
+allTiles = rmvTile(allTiles, currTileInd);
 
 //displaying the current tile
 dispTile();
+
+//total number of remaining tiles to be drawn is initiated
+remaining = allTiles.length;
 
 
 ///////
@@ -367,15 +446,32 @@ dispTile();
 
 
 //progress notes as of 12/2/23...
-//tiles created and UI working as designed
 //need to create drag/drop functionality and logic for moving and combining tiles
+///drag/drop functionality written!!!
+//---need to write logic to execute when things are moved and combined!
+
+//write logic to update the score after each move
+
 //---need to write logic to use the gameboard objects matrix to check as to whether the tile has been moved already and whether or not it has been combined already (these things prevent themselves and each other)
 //need to write logic to check for sequences and to adjust current score accordingly (using the gameboard tile values table)
+
 //disable rows when they cant be added to anymore without exceeding 21??? (logic already prevents user from dropping a new tile on top of once already placed)
+
 //write logic in toSelect to check for game end (full board... indicated by gameboard objects matrix being full (no undefined values in it))
+
 //need to write logic for placement of random tile in random space (using the currenttile logic previously used, with random placement choice... new function with a new random value generator)
+
 //need to write logic for game-end point summation and summary
-//need to write logic for tile counts in the extra info section
 //need to write logic for hiding/displaying the extra info section
+
+
+//finished tasks...
+//tiles created and UI working as designed---done!
+//need to write logic for tile counts in the extra info section---done!!!
+//need to write logic to remove the drawn tiles from the tile bag as they are drawn---done!!!
+
+
+
+
 
 //may need to adjust the tile disribution!!! seems very hard with my initial choice...
