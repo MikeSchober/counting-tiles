@@ -65,6 +65,8 @@ document.addEventListener('click', toSelect);
 
 let curr = document.getElementById("currTile");
 
+let scr = document.getElementById("score");
+
 
 ///////
 
@@ -111,7 +113,7 @@ function toSelect(event) {
         space = element.id;
 
         //placing the currTile on the clicked space on the gameboard
-        let placeTile = `<img src="${currTile.image}" alt="CURRENT TILE" draggable="true" ondragstart="drag(event)" class="pTile" id="tile${currTile.id}">`;
+        let placeTile = `<img src="${currTile.image}" alt="CURRENT TILE" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${currTile.id}">`;
         element.insertAdjacentHTML("afterbegin", placeTile);
 
         //updating the gameboard tile values matrix
@@ -133,6 +135,15 @@ function toSelect(event) {
         //updating the discarded tile count
         discarded = tileNums - (allTiles.length + placed);
         console.log(`discarded: ${discarded}`);
+
+        //updating the user's current score
+        score++;
+        //<h3 class="score">Current score: </h3>
+
+        //updating the score disolay in the ui
+        let viewScore = `<h3>Current score: ${score}</h3>`;
+        scr.removeChild(scr.firstChild);
+        scr.insertAdjacentHTML("afterbegin", viewScore);
 
         //removing the currTile from the current tile display so that the next tile can be shown
         curr.removeChild(curr.firstChild);
@@ -366,28 +377,186 @@ function showSums(theSums) {
 ///
 //functions for moving and combining tiles
 
-//function to be executed when a tile img is grabbed and begins moving
-function drag(e) {
+//holds the original location of the tile being moved (string)
+//string bc it comes from the dragTile(e) function, taking the location from id of the parent div of the img being moved
+let origLoc;
 
-    console.log(`event target id: ${e.target.id}`);
+//function to be executed when a tile img is grabbed and begins moving
+function dragTile(e) {
+
+    origLoc = e.target.parentElement.id;
+
+    console.log(`parent element id (orig loc): ${e.target.parentElement.id}`);
     e.dataTransfer.setData("text", e.target.id)
 
 };
 
 //function to enable the slide
-function allowDrop(e) {
+function allowDropTile(e) {
     e.preventDefault()
 
 };
 
 //function to execute the slide
-function drop(e) {
-    e.preventDefault();
-    let d = e.dataTransfer.getData("text");
-    e.target.appendChild(document.getElementById(d));
+function dropTile(e) {
+
+    console.log(`target id (should be location from html): ${e.target.id}`);
+
+    //if the game tile has not been moved yet...
+    if (gameTiles[origLoc[1]][origLoc[3]].moved === false) {
+
+        //and...
+        //logic to check for adjacent position
+        if (checkAdjacent(origLoc, e.target.id)) {
+
+            //if adjacent, the drop executes...
+            e.preventDefault();
+            let d = e.dataTransfer.getData("text");
+            e.target.appendChild(document.getElementById(d));
+
+            //logic to update the matrices
+
+            //tile values matrix updated
+            gameboard = updateMatx(gameboard, origLoc, e.target.id, 0);
+
+            //logic to update the .moved property in the tile object in the gameTiles matrix
+            gameTiles[origLoc[1]][origLoc[3]].moved = true;
+
+            //tile objects matrix updated
+            gameTiles = updateMatx(gameTiles, origLoc, e.target.id, undefined);
+
+            //updating the array that holds the sum of each row's tile values
+            rowSums = rowValues(gameboard);
+
+            //displaying the row sums in the UI
+            showSums(rowSums);
+
+            //bc moving or combining a tile results in the currently-drawn tile to be discarded, the currently-drawn tile is removed and the next tile is drawn...
+
+            //removing the currTile from the current tile display so that the next tile can be shown
+            curr.removeChild(curr.firstChild);
+
+            //next random tile index chosen
+            currTileInd = drawIndex(allTiles.length);
+
+            //next tile drawn
+            currTile = allTiles[currTileInd];
+
+            //removing the drawn tile from the tile bag
+            allTiles = rmvTile(allTiles, currTileInd);
+
+            //displaying the next tile
+            dispTile();
+
+            //total number of remaining tiles to be drawn is updated
+            remaining = allTiles.length;
+            console.log(`tiles remaining to be drawn: ${remaining}`);
+
+            //updating the discarded tile count
+            //plus one here bc the currently-drawn tile is not included in the allTiles bag or the number of placed tiles
+            discarded = tileNums - (allTiles.length + placed + 1);
+            console.log(`discarded: ${discarded}`);
+
+        }
+
+    } else {
+
+        //if not adjacent... error message???
+        //thinking nothing happens...
+
+
+    }
+
+
 
 };
 
+
+//function to check as to whether or not two locations are adjacent to each other
+//takes as args the string representations of the locations, taken from the ids of the div elements in the html doc (ex: "[5,0]")
+//returns true or false
+function checkAdjacent(start, stop) {
+
+    //holds bool value to return
+    let adj;
+
+    //holds indices of the starting position
+    //cast into number data type
+    let startY = Number(start[1]);
+    let startX = Number(start[3]);
+
+    //holds indices of the proposed ending position
+    //cast into number data type
+    let stopY = Number(stop[1]);
+    let stopX = Number(stop[3]);
+
+    console.log(`starting pos:`);
+    console.log(`row: ${startY}`);
+    console.log(`col: ${startX}`);
+
+    console.log(`ending pos:`);
+    console.log(`row: ${stopY}`);
+    console.log(`col: ${stopX}`);
+
+    //bc one of the values between the start position and the stop posiiton have to be the same between the two, we look for that first
+    if (startY === stopY) {
+
+        //if that is satisfied with the proposed move, the other value in the new position must be plus or minus one from its original value
+        if (stopX === startX + 1 || stopX === startX - 1) {
+
+            adj = true;
+
+        }
+
+    } else if (startX === stopX) {
+
+        //if that is satisfied with the proposed move, the other value in the new position must be plus or minus one from its original value
+        if (stopY === startY + 1 || stopY === startY - 1) {
+
+            adj = true;
+
+        }
+
+    } else {
+
+        adj = false;
+
+    }
+
+    return adj;
+
+};
+
+
+//function to update the matrices
+//takes as args... matrix to be updated (array), two locations that are changing (indices in str representation of array from the html doc), new value for location one (0 for the tile values array, undefined for the tile objects array) 
+//it just moves the value from location one to location two by default
+//returns the updated array
+//will have to run this for both the tile values array and the tile objects array
+function updateMatx(matArr, strt, stp, dfVal) {
+
+    //holds updated matrix to return
+    let updatedArr = matArr;
+
+    //holds indices of the starting position [row, col] = [y,x]
+    //cast into number data type
+    let startY = Number(strt[1]);
+    let startX = Number(strt[3]);
+
+    //holds indices of the proposed ending position [row, col] = [y,x]
+    //cast into number data type
+    let stopY = Number(stp[1]);
+    let stopX = Number(stp[3]);
+
+    //moving the value from the original loc to the new loc in the matrix
+    updatedArr[stopY][stopX] = updatedArr[startY][startX];
+
+    //replacing the value at the original loc with the default value
+    updatedArr[startY][startX] = dfVal;
+
+    return updatedArr;
+
+};
 
 ///////
 
@@ -446,14 +615,14 @@ remaining = allTiles.length;
 
 
 //progress notes as of 12/2/23...
-//need to create drag/drop functionality and logic for moving and combining tiles
-///drag/drop functionality written!!!
-//---need to write logic to execute when things are moved and combined!
+//need to create logic for combining tiles
+//need to write logic for when things are combined!
 
-//write logic to update the score after each move
+//need to write the logic to update the row totals when things are combined
 
-//---need to write logic to use the gameboard objects matrix to check as to whether the tile has been moved already and whether or not it has been combined already (these things prevent themselves and each other)
-//need to write logic to check for sequences and to adjust current score accordingly (using the gameboard tile values table)
+//---need to write logic to use the gameboard objects matrix to check as to whether the tile has been combined already
+
+//need to write logic to check for sequences and to adjust current score accordingly (using the gameboard tile values table)---might not do this... (tabled for now)
 
 //disable rows when they cant be added to anymore without exceeding 21??? (logic already prevents user from dropping a new tile on top of once already placed)
 
@@ -469,6 +638,16 @@ remaining = allTiles.length;
 //tiles created and UI working as designed---done!
 //need to write logic for tile counts in the extra info section---done!!!
 //need to write logic to remove the drawn tiles from the tile bag as they are drawn---done!!!
+
+//need to create drag/drop functionality and logic for moving and combining tiles
+///drag/drop functionality written!!!
+//---need to write logic to execute when things are moved---done!!!
+
+//write logic to update the row totals after placing and moving---done!
+
+//write logic to update the total score after each move---done!!!
+
+
 
 
 
