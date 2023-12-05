@@ -145,6 +145,9 @@ function toSelect(event) {
         scr.removeChild(scr.firstChild);
         scr.insertAdjacentHTML("afterbegin", viewScore);
 
+        //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+        checkSum(rowSums, gameTiles, gameboard, 6);
+
         //removing the currTile from the current tile display so that the next tile can be shown
         curr.removeChild(curr.firstChild);
 
@@ -374,6 +377,130 @@ function showSums(theSums) {
 };
 
 
+//function to clear a completed row in the ui
+//takes as args the index of the row to clear (number) and the number of columns in the table (number)
+function clrUserRow(rowInd, colmns) {
+
+    //clear row by selecting each child element of the row div
+    //document.getElementById("currTile");
+    //bc we have the row index of the row to clear, we can use string literals to grab each div id in the row to clear it
+    for (let c = 0; c < colmns; c++) {
+
+        //clearing the completed row in the ui
+
+        //selects the current cell of the row we are clearing
+        let currC = document.getElementById(`[${rowInd},${c}]`)
+
+        //removes the img from the cell
+        currC.removeChild(currC.firstChild);
+
+    }
+
+};
+
+
+//function to clear a completed row in tile obj matrix
+//takes as args the tile obj matrix (array), the index of the row to clear (number), and the number of columns in the table (number)
+function clrObjRow(tObjs, rowInd, colmns) {
+
+    //holds the updated matrix to return
+    let updatedObjMatx = tObjs;
+
+    for (let c = 0; c < colmns; c++) {
+
+        //clearing the completed row in the tile objects matrix
+        updatedObjMatx[rowInd][c] = undefined;
+
+    }
+
+    return updatedObjMatx;
+
+};
+
+
+//function to clear a completed row in the tile values matrix
+//takes as args the tile values matrix (array), the index of the row to clear (number), and the number of columns in the table (number)
+function clrValRow(tVals, rowInd, colmns) {
+
+    //holds the updated matrix to return
+    let updatedValMatx = tVals;
+
+
+    for (let c = 0; c < colmns; c++) {
+
+        //clearing the completed row in the tile values matrix
+
+        //setting the value back to the default of zero
+        updatedValMatx[rowInd][c] = 0;
+
+    }
+
+    return updatedValMatx;
+
+};
+
+
+
+//function to check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again. (this logic will need to run after a tile is placed, moved, or combined (when i write the logic for tiles to be combined))
+//takes the rowSums array as arg and both matrices as args (arrays), as well as the number of columns currently in the gameboard (number)
+function checkSum(sArr, tObjs, tVals, cols) {
+
+    //holds bool to indicate whether or not the row in the tile objs array is full (no undefined)
+    let fullRow = true;
+
+    //checking for value of 21 in the sums array
+    for (let y = 0; y < sArr.length; y++) {
+
+        //if the row sum is 21...
+        if (sArr[y] === 21) {
+
+            //for loop to check for full row
+            for (let x of gameTiles[y]) {
+
+                if (x === undefined) {
+
+                    fullRow = false;
+                    console.log('broke from for of loop');
+                    break;
+                }
+            };
+
+            //and if the row is completely full...
+            if (fullRow === true) {
+
+                //clears the completed row of the tile values matrix
+                gameboard = clrValRow(tVals, y, cols);
+
+                //clears the completed row of the tile objs matrix
+                gameTiles = clrObjRow(tObjs, y, cols);
+
+                //updating the array that holds the sum of each row's tile values
+                rowSums = rowValues(gameboard);
+
+                //displaying the row sums in the UI
+                showSums(rowSums);
+
+
+                //style it with special style for 3 seconds...
+                //come back to this...
+
+                ///setTimeout function calls function to clear the row in the ui after 3 seconds...
+                setTimeout(clrUserRow, 3000, y, cols);
+
+                console.log('broke from the for loop after clring');
+                //break out of the for loop
+                break;
+
+
+            }
+
+        }
+
+    }
+
+};
+
+
 ///
 //functions for moving and combining tiles
 
@@ -391,13 +518,13 @@ function dragTile(e) {
 
 };
 
-//function to enable the slide
+//function to enable the drop
 function allowDropTile(e) {
     e.preventDefault()
 
 };
 
-//function to execute the slide
+//function to execute the drop
 function dropTile(e) {
 
     console.log(`target id (should be location from html): ${e.target.id}`);
@@ -430,6 +557,9 @@ function dropTile(e) {
 
             //displaying the row sums in the UI
             showSums(rowSums);
+
+            //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+            checkSum(rowSums, gameTiles, gameboard, 6);
 
             //bc moving or combining a tile results in the currently-drawn tile to be discarded, the currently-drawn tile is removed and the next tile is drawn...
 
@@ -622,9 +752,14 @@ remaining = allTiles.length;
 
 //---need to write logic to use the gameboard objects matrix to check as to whether the tile has been combined already
 
+
+//need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
+
+
+
 //need to write logic to check for sequences and to adjust current score accordingly (using the gameboard tile values table)---might not do this... (tabled for now)
 
-//disable rows when they cant be added to anymore without exceeding 21??? (logic already prevents user from dropping a new tile on top of once already placed)
+//disable rows when they cant be added to anymore without exceeding 21???---not needed. logic already prevents user from dropping a new tile on top of once already placed and it's always psbl that the user could move or combine tiles to change the situation.
 
 //write logic in toSelect to check for game end (full board... indicated by gameboard objects matrix being full (no undefined values in it))
 
@@ -647,10 +782,16 @@ remaining = allTiles.length;
 
 //write logic to update the total score after each move---done!!!
 
+//need to write logic to check for full rows that add up to 21, then clear the row so that the user can begin fulling it again. (this logic will need to run after a tile is placed, moved, or combined (when i write the logic for tiles to be combined))---done!!!
 
 
 
 
+
+
+
+
+//after consideration, plan is to build the game to that there is seemingly endless scoring opportunity. will be more interesting than just a clear, finite scoring potential.
 
 
 //may need to adjust the tile disribution!!! seems very hard with my initial choice...
