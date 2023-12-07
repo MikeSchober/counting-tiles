@@ -404,16 +404,16 @@ function clrUserRow(rowInd, colmns) {
 function clrObjRow(tObjs, rowInd, colmns) {
 
     //holds the updated matrix to return
-    let updatedObjMatx = tObjs;
+    // let updatedObjMatx = tObjs;
 
     for (let c = 0; c < colmns; c++) {
 
         //clearing the completed row in the tile objects matrix
-        updatedObjMatx[rowInd][c] = undefined;
+        tObjs[rowInd][c] = undefined;
 
     }
 
-    return updatedObjMatx;
+    // return updatedObjMatx;
 
 };
 
@@ -423,7 +423,7 @@ function clrObjRow(tObjs, rowInd, colmns) {
 function clrValRow(tVals, rowInd, colmns) {
 
     //holds the updated matrix to return
-    let updatedValMatx = tVals;
+    // let updatedValMatx = tVals;
 
 
     for (let c = 0; c < colmns; c++) {
@@ -431,11 +431,11 @@ function clrValRow(tVals, rowInd, colmns) {
         //clearing the completed row in the tile values matrix
 
         //setting the value back to the default of zero
-        updatedValMatx[rowInd][c] = 0;
+        tVals[rowInd][c] = 0;
 
     }
 
-    return updatedValMatx;
+    // return updatedValMatx;
 
 };
 
@@ -469,10 +469,12 @@ function checkSum(sArr, tObjs, tVals, cols) {
             if (fullRow === true) {
 
                 //clears the completed row of the tile values matrix
-                gameboard = clrValRow(tVals, y, cols);
+                // gameboard = clrValRow(tVals, y, cols);
+                clrValRow(tVals, y, cols);
 
                 //clears the completed row of the tile objs matrix
-                gameTiles = clrObjRow(tObjs, y, cols);
+                // gameTiles = clrObjRow(tObjs, y, cols);
+                clrObjRow(tObjs, y, cols);
 
                 //updating the array that holds the sum of each row's tile values
                 rowSums = rowValues(gameboard);
@@ -528,72 +530,165 @@ function allowDropTile(e) {
 function dropTile(e) {
 
     console.log(`target id (should be location from html): ${e.target.id}`);
+    console.log(`target parent element id: ${e.target.parentElement.id}`);
 
-    //if the game tile has not been moved yet...
-    if (gameTiles[origLoc[1]][origLoc[3]].moved === false) {
 
-        //and...
-        //logic to check for adjacent position
-        if (checkAdjacent(origLoc, e.target.id)) {
+    //if the e.target.id (the div) already contains an img, then execute the combine test logic
+    //this is always triggering right now...
+    if (e.target.tagName === 'IMG') {
 
-            //if adjacent, the drop executes...
-            e.preventDefault();
-            let d = e.dataTransfer.getData("text");
-            e.target.appendChild(document.getElementById(d));
 
-            //logic to update the matrices
+        //if the div contains an img already, the target.id now becomes the img id. bc we need the div id, we need to call e.target.parentElement.id in these situations. thus, must run the checkAdjacent function seperately for the combining and the moving scenarios...
+        if (checkAdjacent(origLoc, e.target.parentElement.id)) {
 
-            //tile values matrix updated
-            gameboard = updateMatx(gameboard, origLoc, e.target.id, 0);
 
-            //logic to update the .moved property in the tile object in the gameTiles matrix
-            gameTiles[origLoc[1]][origLoc[3]].moved = true;
+            //if the tile obj in the original loc has not yet been combined (dragging into another tile)...
+            if (gameTiles[origLoc[1]][origLoc[3]].combined === false) {
 
-            //tile objects matrix updated
-            gameTiles = updateMatx(gameTiles, origLoc, e.target.id, undefined);
 
-            //updating the array that holds the sum of each row's tile values
-            rowSums = rowValues(gameboard);
+                //combine tile logic here
+                //function to take the ids from both the starting div and the drop target div and to use those id (location) values to take the tile values from the tile values matrix and determine the combined value (9/3 or 4/2)... this then returns the value for use in calling the new img name for the tile display in the original location
+                //basically... user can combined a 9 into a 3 to change the 9 into a 3, or can combined a 4 into a 2 to change the 4 into a 2... psbly will change this later to allow combining any tile that is divisible by another tile value except for one
 
-            //displaying the row sums in the UI
-            showSums(rowSums);
+                //if the checkCombine function results in an allowable result (not zero), then the combine logic excutes here...
 
-            //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
-            checkSum(rowSums, gameTiles, gameboard, 6);
+                //holds the resulting number from the combo (only allowable if the result is not zero... see checkCombine for the specific logic)
+                let cmbValue = checkCombine(origLoc, e.target.parentElement.id, gameboard);
 
-            //bc moving or combining a tile results in the currently-drawn tile to be discarded, the currently-drawn tile is removed and the next tile is drawn...
+                if (cmbValue === 3 || cmbValue === 2) {
 
-            //removing the currTile from the current tile display so that the next tile can be shown
-            curr.removeChild(curr.firstChild);
+                    //logic for combining tiles
 
-            //next random tile index chosen
-            currTileInd = drawIndex(allTiles.length);
+                    //delete the img in the origLoc div and replace it with the new/combine value's img
 
-            //next tile drawn
-            currTile = allTiles[currTileInd];
+                    //deletes the orig img
+                    document.getElementById(origLoc).removeChild(document.getElementById(origLoc).firstChild);
 
-            //removing the drawn tile from the tile bag
-            allTiles = rmvTile(allTiles, currTileInd);
+                    //adds the new img
+                    let cmbTile = `<img src="${cmbValue}.png" alt="combined tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[origLoc[1]][origLoc[3]].id}">`;
+                    document.getElementById(origLoc).insertAdjacentHTML("afterbegin", cmbTile);
 
-            //displaying the next tile
-            dispTile();
 
-            //total number of remaining tiles to be drawn is updated
-            remaining = allTiles.length;
-            console.log(`tiles remaining to be drawn: ${remaining}`);
+                    //in the tile objs matrix, for the obj at the origLoc, set the combined property = true and the newValue = new combined value (either 2 or 3)
+                    gameTiles[origLoc[1]][origLoc[3]].combined = true;
+                    gameTiles[origLoc[1]][origLoc[3]].moved = true;
+                    gameTiles[origLoc[1]][origLoc[3]].newValue = cmbValue;
 
-            //updating the discarded tile count
-            //plus one here bc the currently-drawn tile is not included in the allTiles bag or the number of placed tiles
-            discarded = tileNums - (allTiles.length + placed + 1);
-            console.log(`discarded: ${discarded}`);
+                    //in the tile values matrix, for the obj at origLoc, set the value to the new combined value (either 2 or 3)
+                    gameboard[origLoc[1]][origLoc[3]] = cmbValue;
+
+                    //updating the array that holds the sum of each row's tile values
+                    rowSums = rowValues(gameboard);
+
+                    //displaying the row sums in the UI
+                    showSums(rowSums);
+
+                    //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+                    checkSum(rowSums, gameTiles, gameboard, 6);
+
+                    //currently, combining tiles allows the discard of the currently-drawn tile... may change this... to change just remove the following code lines to the end of this block...
+
+                    //removing the currTile from the current tile display so that the next tile can be shown
+                    curr.removeChild(curr.firstChild);
+
+                    //next random tile index chosen
+                    currTileInd = drawIndex(allTiles.length);
+
+                    //next tile drawn
+                    currTile = allTiles[currTileInd];
+
+                    //removing the drawn tile from the tile bag
+                    allTiles = rmvTile(allTiles, currTileInd);
+
+                    //displaying the next tile
+                    dispTile();
+
+                    //total number of remaining tiles to be drawn is updated
+                    remaining = allTiles.length;
+                    console.log(`tiles remaining to be drawn: ${remaining}`);
+
+                    //updating the discarded tile count
+                    //plus one here bc the currently-drawn tile is not included in the allTiles bag or the number of placed tiles
+                    discarded = tileNums - (allTiles.length + placed + 1);
+                    console.log(`discarded: ${discarded}`);
+
+
+                }
+
+
+            }
+
 
         }
 
+
     } else {
 
-        //if not adjacent... error message???
-        //thinking nothing happens...
+        //if the game tile has not been moved yet...
+        if (gameTiles[origLoc[1]][origLoc[3]].moved === false) {
 
+            //and...
+            //logic to check for adjacent position. if adjacent...
+            if (checkAdjacent(origLoc, e.target.id)) {
+
+                //else... execute the tile moving logic...
+
+                //if adjacent, the drop executes...
+                e.preventDefault();
+                let d = e.dataTransfer.getData("text");
+                e.target.appendChild(document.getElementById(d));
+
+                //logic to update the matrices
+
+                //tile values matrix updated
+                gameboard = updateMatx(gameboard, origLoc, e.target.id, 0);
+
+                //logic to update the .moved property in the tile object in the gameTiles matrix
+                gameTiles[origLoc[1]][origLoc[3]].moved = true;
+
+                //tile objects matrix updated
+                gameTiles = updateMatx(gameTiles, origLoc, e.target.id, undefined);
+
+                //updating the array that holds the sum of each row's tile values
+                rowSums = rowValues(gameboard);
+
+                //displaying the row sums in the UI
+                showSums(rowSums);
+
+                //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+                checkSum(rowSums, gameTiles, gameboard, 6);
+
+                //bc moving or combining a tile results in the currently-drawn tile to be discarded, the currently-drawn tile is removed and the next tile is drawn...
+
+                //removing the currTile from the current tile display so that the next tile can be shown
+                curr.removeChild(curr.firstChild);
+
+                //next random tile index chosen
+                currTileInd = drawIndex(allTiles.length);
+
+                //next tile drawn
+                currTile = allTiles[currTileInd];
+
+                //removing the drawn tile from the tile bag
+                allTiles = rmvTile(allTiles, currTileInd);
+
+                //displaying the next tile
+                dispTile();
+
+                //total number of remaining tiles to be drawn is updated
+                remaining = allTiles.length;
+                console.log(`tiles remaining to be drawn: ${remaining}`);
+
+                //updating the discarded tile count
+                //plus one here bc the currently-drawn tile is not included in the allTiles bag or the number of placed tiles
+                discarded = tileNums - (allTiles.length + placed + 1);
+                console.log(`discarded: ${discarded}`);
+
+
+            }
+
+
+        }
 
     }
 
@@ -609,6 +704,8 @@ function checkAdjacent(start, stop) {
 
     //holds bool value to return
     let adj;
+
+    console.log(`stop passed-in: ${stop}`);
 
     //holds indices of the starting position
     //cast into number data type
@@ -687,6 +784,58 @@ function updateMatx(matArr, strt, stp, dfVal) {
     return updatedArr;
 
 };
+
+
+//function to take the ids from both the starting div and the drop target div and to use those id (location) values to take the tile values from the tile values matrix and determine the combined value (9/3 or 4/2)... this then returns the value for use in calling the new img name for the tile display in the original location
+//takes as agrs the string representations of the locations, taken from the ids of the div elements in the html doc (ex: "[5,0]") and the gameboard (tile values array)
+//returns 2 or 3 if combo allowed, else returns zero (number)
+function checkCombine(start, stop, tVals) {
+
+    //holds number value to return
+    let cmb;
+
+    //holds indices of the starting position
+    //cast into number data type
+    let startY = Number(start[1]);
+    let startX = Number(start[3]);
+
+    //holds indices of the proposed ending position
+    //cast into number data type
+    let stopY = Number(stop[1]);
+    let stopX = Number(stop[3]);
+
+    //logic to check the values of the tiles being combined. uses the values from passed-in tile values matrix to check for specific values for the tiles that the user is attempting to combine.
+    //as of now, only allowing combining of 9/3 and 4/2, resulting in the square root and only works when dragging the larger number into the smaller number, changing the tile value of the larger number
+
+    //checking for the 9/3 combo...
+    if (tVals[startY][startX] === 9 && tVals[stopY][stopX] === 3) {
+
+        cmb = 3;
+        console.log(`cmb = 3`);
+
+    }
+    //checking for the 4/2 combo
+    else if (tVals[startY][startX] === 4 && tVals[stopY][stopX] === 2) {
+
+        cmb = 2;
+        console.log(`cmb = 2`);
+
+    }
+    //zero if not an authorized combo for combining
+    else {
+
+        cmb = 0
+
+    }
+
+
+    //returns the new value for the tile that was dragged into the divisor tile (zero is combine not authorized)
+    return cmb;
+
+};
+
+
+
 
 ///////
 
