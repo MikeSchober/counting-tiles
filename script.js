@@ -142,7 +142,7 @@ function toSelect(event) {
 
         //updating the score disolay in the ui
         let viewScore = `<h3>Current score: ${score}</h3>`;
-        scr.removeChild(scr.firstChild);
+        scr.removeChild(scr.children[0]);
         scr.insertAdjacentHTML("afterbegin", viewScore);
 
         //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
@@ -199,7 +199,7 @@ function genTiles(dist) {
             console.log(`current id: ${ident}`);
 
             //creating new tile
-            let t = new Tile(ident, val, false, false, 0, 0, `${val}.png`);
+            let t = new Tile(ident, val, false, false, 0, 0, `images/${val}.png`);
 
             //pushing new tile into the tile bag
             tileBag.push(t);
@@ -482,6 +482,15 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 //displaying the row sums in the UI
                 showSums(rowSums);
 
+                //updating the user's current score... adds 21 pts!
+                score = score + 21;
+
+                //updating the score disolay in the ui
+                let viewScore = `<h3>Current score: ${score}</h3>`;
+                scr.removeChild(scr.children[0]);
+                scr.insertAdjacentHTML("afterbegin", viewScore);
+
+
 
                 //style it with special style for 3 seconds...
                 //come back to this...
@@ -565,14 +574,18 @@ function dropTile(e) {
                     document.getElementById(origLoc).removeChild(document.getElementById(origLoc).firstChild);
 
                     //adds the new img
-                    let cmbTile = `<img src="${cmbValue}.png" alt="combined tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[origLoc[1]][origLoc[3]].id}">`;
+                    let cmbTile = `<img src="images/${cmbValue}cmb.png" alt="combined tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[origLoc[1]][origLoc[3]].id}">`;
                     document.getElementById(origLoc).insertAdjacentHTML("afterbegin", cmbTile);
 
 
                     //in the tile objs matrix, for the obj at the origLoc, set the combined property = true and the newValue = new combined value (either 2 or 3)
+                    //also changes the moved property to true to prevent subsequent moving (may change this later)
+                    //also changes the img path to the correct img
                     gameTiles[origLoc[1]][origLoc[3]].combined = true;
                     gameTiles[origLoc[1]][origLoc[3]].moved = true;
                     gameTiles[origLoc[1]][origLoc[3]].newValue = cmbValue;
+                    gameTiles[origLoc[1]][origLoc[3]].image = `images/${gameTiles[origLoc[1]][origLoc[3]].newValue}cmb.png`;
+
 
                     //in the tile values matrix, for the obj at origLoc, set the value to the new combined value (either 2 or 3)
                     gameboard[origLoc[1]][origLoc[3]] = cmbValue;
@@ -638,6 +651,9 @@ function dropTile(e) {
                 let d = e.dataTransfer.getData("text");
                 e.target.appendChild(document.getElementById(d));
 
+                //logic to update the picture styling
+                e.target.firstChild.src = `images/${gameTiles[origLoc[1]][origLoc[3]].value}mvd.png`;
+
                 //logic to update the matrices
 
                 //tile values matrix updated
@@ -645,6 +661,9 @@ function dropTile(e) {
 
                 //logic to update the .moved property in the tile object in the gameTiles matrix
                 gameTiles[origLoc[1]][origLoc[3]].moved = true;
+
+                //logic to update the image property in the tile object in the gameTiles matrix
+                gameTiles[origLoc[1]][origLoc[3]].image = `images/${gameTiles[origLoc[1]][origLoc[3]].value}mvd.png`;
 
                 //tile objects matrix updated
                 gameTiles = updateMatx(gameTiles, origLoc, e.target.id, undefined);
@@ -894,21 +913,9 @@ remaining = allTiles.length;
 
 
 //progress notes as of 12/2/23...
-//need to create logic for combining tiles
-//need to write logic for when things are combined!
-
-//need to write the logic to update the row totals when things are combined
-
-//---need to write logic to use the gameboard objects matrix to check as to whether the tile has been combined already
-
 
 //need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
 
-
-
-//need to write logic to check for sequences and to adjust current score accordingly (using the gameboard tile values table)---might not do this... (tabled for now)
-
-//disable rows when they cant be added to anymore without exceeding 21???---not needed. logic already prevents user from dropping a new tile on top of once already placed and it's always psbl that the user could move or combine tiles to change the situation.
 
 //write logic in toSelect to check for game end (full board... indicated by gameboard objects matrix being full (no undefined values in it))
 
@@ -932,6 +939,17 @@ remaining = allTiles.length;
 //write logic to update the total score after each move---done!!!
 
 //need to write logic to check for full rows that add up to 21, then clear the row so that the user can begin fulling it again. (this logic will need to run after a tile is placed, moved, or combined (when i write the logic for tiles to be combined))---done!!!
+
+//need to create logic for combining tiles---done!
+//need to write logic for when things are combined!---done!
+
+//need to write the logic to update the row totals when things are combined---done!
+
+//---need to write logic to use the gameboard objects matrix to check as to whether the tile has been combined already---done!
+
+//need to write logic to check for sequences and to adjust current score accordingly (using the gameboard tile values table)---might not do this... (tabled for now)---tabled!!!
+
+//disable rows when they cant be added to anymore without exceeding 21???---not needed. logic already prevents user from dropping a new tile on top of once already placed and it's always psbl that the user could move or combine tiles to change the situation.---not needed!
 
 
 
