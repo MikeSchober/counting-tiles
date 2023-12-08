@@ -924,6 +924,8 @@ remaining = allTiles.length;
 //need to write logic for game-end point summation and summary
 //need to write logic for hiding/displaying the extra info section
 
+//small bug in the code combining tiles logic... allows user to combine a tile after it has been moved bc combine logic doesnt check for the .moved property of the tile obj (maybe just get rid of the combined prop and use moved to determine it's move/combine status?)
+
 
 //finished tasks...
 //tiles created and UI working as designed---done!
