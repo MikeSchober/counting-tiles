@@ -858,13 +858,13 @@ function checkCombine(start, stop, tVals) {
 
 
     //logic to check the values of the tiles being combined. uses the values from passed-in tile values matrix to check for specific values for the tiles that the user is attempting to combine.
-    //with the new distribution (1-14), allowing the combining of any even tile with the tile of exactly half its value. combining this way results in the larger tile being divided in half
+    //with the new distribution (1-14), allowing the combining of any even tile with any other tile by which it is evenly divisible. combining this way results in the larger tile taking on the value of the quotient
 
     //checking for a valid combo...
-    //if the result of the division between the tile being dragged and the tile with which it is being combined equals two, the combine operation is allowed and the larger tile gets divided in half, resulting in it being assigned the value of the smaller tile
-    if ((tVals[startY][startX]) / (tVals[stopY][stopX]) === 2) {
+    //if the modulus between the tile being dragged and the tile with which it is being combined equals zero, the combine operation is allowed, division of the larger tile by the smaller tile is executed, and the larger tile takes on the quotient
+    if ((tVals[startY][startX]) % (tVals[stopY][stopX]) === 0) {
 
-        cmb = tVals[stopY][stopX];
+        cmb = (tVals[startY][startX]) / (tVals[stopY][stopX]);
         console.log(`legal cmb! cmb = ${cmb}`);
 
     }
