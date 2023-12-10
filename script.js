@@ -45,7 +45,61 @@ let remaining;
 //holds id of user-clicked gameboard space
 let space;
 
+//holds number of completed rows of 21
+let completedRows = 0;
+
+//array to hold the status of the available bonuses
+//defaults to zero for each
+//changes to value of one if bonus should be active
+//each time the user gets a completed row, need function that iterates through this array and changes the first occurring zero to a one
+//need function to check this array and activate bonuses, as needed after each turn
+let bonuses = [0, 0, 0, 0];
+
+//vars to hold status for toSelect functionality for bonus application
+
+//for remove tile...
+let rem = false;
+
+//for change tile...
+let chg = false;
+
+//for wild tile...
+let wld = false;
+
 ///////
+
+
+
+///////
+//DOM ELEMENTS
+
+//holds the current tile display div in the html doc
+let curr = document.getElementById("currTile");
+
+//holds score display in the ui
+let scr = document.getElementById("score");
+
+
+//special power buttons!
+//discard
+let discard = document.getElementById("discard");
+
+//remove
+let remove = document.getElementById("remove");
+
+//change to 1
+let change = document.getElementById("change");
+
+//wild card tile
+let wild = document.getElementById("wild");
+
+//array that holds all selected buttons abv
+//created so that we can iterate through them to activate/deactivate
+let powers = [discard, remove, change, wild];
+
+///////
+
+
 
 
 ///////
@@ -56,17 +110,11 @@ let space;
 //toSelect() callback function uses event.target to get the id from the clicked element and, if it is a <TH> element, displays a modal to show that column's taf data
 document.addEventListener('click', toSelect);
 
-
-///////
-
-
-///////
-//DOM ELEMENTS
-
-let curr = document.getElementById("currTile");
-
-let scr = document.getElementById("score");
-
+//event listeners for clicked special powers buttons!
+discard.addEventListener('click', pOne);
+remove.addEventListener('click', pTwo);
+change.addEventListener('click', pThree);
+wild.addEventListener('click', pFour);
 
 ///////
 
@@ -166,6 +214,27 @@ function toSelect(event) {
         //total number of remaining tiles to be drawn is updated
         remaining = allTiles.length;
         console.log(`tiles remaining to be drawn: ${remaining}`);
+
+    } else if (element.tagName === 'IMG' && element.className === 'pTile' && rem === true) {
+
+        //functionality for remove clicked tile
+        console.log(`remove!`);
+
+        rem = false;
+
+    } else if (element.tagName === 'IMG' && element.className === 'pTile' && chg === true) {
+
+        //functionality for change clicked tile to 1
+        console.log(`change!`);
+
+        chg = false;
+
+    } else if (element.tagName === 'IMG' && element.className === 'pTile' && wld === true) {
+
+        //functionality for wild tile (completes the row its in which it's placed)
+        console.log(`wild card!`);
+
+        wld = false;
 
     }
 };
@@ -491,6 +560,11 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 scr.removeChild(scr.children[0]);
                 scr.insertAdjacentHTML("afterbegin", viewScore);
 
+                //updates the bonuses array
+                updateBonus(bonuses);
+
+                //actives the bonuses as needed
+                actBonus(bonuses);
 
 
                 //style it with special style for 3 seconds...
@@ -513,6 +587,101 @@ function checkSum(sArr, tObjs, tVals, cols) {
     }
 
 };
+
+
+//function that iterates through the bonuses array each time the user gets a completed row and changes the first occurring zero to a one
+//updates the first value in the array that is a zero to a one (top-bottom of the button stack)
+//arg is the bonuses array
+//updates it in-place
+function updateBonus(b) {
+
+    for (let x = 0; x < b.length; x++) {
+
+        if (b[x] === 0) {
+
+            b[x] = 1;
+            break
+        }
+    }
+
+    return b;
+
+};
+
+
+//function to check the bonus array and activate bonuses, as needed after each turn
+//takes as args the bonuses array (holds bonus status) and the powers array (hold buttons)
+function actBonus(b, p) {
+
+    for (let x = 0; x < b.length; x++) {
+
+        //if bonus is active, activate button for use
+        if (b[x] === 1) {
+
+            p[x].disabled = false;
+
+        }
+
+    }
+
+};
+
+//callback functions for the bonus buttons!!!
+
+//discard current tile and deactivate the button
+//takes no args... just executes the discard/draw functionality
+function pOne() {
+
+    //removing the currTile from the current tile display so that the next tile can be shown
+    curr.removeChild(curr.firstChild);
+
+    //next random tile index chosen
+    currTileInd = drawIndex(allTiles.length);
+
+    //next tile drawn
+    currTile = allTiles[currTileInd];
+
+    //removing the drawn tile from the tile bag
+    allTiles = rmvTile(allTiles, currTileInd);
+
+    //displaying the next tile
+    dispTile();
+
+    //total number of remaining tiles to be drawn is updated
+    remaining = allTiles.length;
+    console.log(`tiles remaining to be drawn: ${remaining}`);
+
+    //updating the discarded tile count (plus one bc the current tile is not included in the allTiles array)
+    discarded = tileNums - (allTiles.length + placed + 1);
+    console.log(`discarded: ${discarded}`);
+
+};
+
+
+
+//remove any tile and deactivate the button
+function pTwo() {
+
+    rem = true;
+
+};
+
+
+//change any tile value to 1 and deactivate the button
+function pThree() {
+
+    chg = true;
+
+};
+
+
+//wild cald tile---complete any row and deactivate the button
+function pFour() {
+
+    wld = true;
+
+};
+
 
 
 ///
@@ -941,6 +1110,12 @@ remaining = allTiles.length;
 
 
 //progress notes as of 12/2/23...
+
+//need to write logic for bonuses trhat get unlocked as user completes rows of 21
+//need to create buttons for each bonus
+//---default is disabled... enabled from top to bottom as user completes rows of 21
+//user clicks button and then clicks in row (if applicable... for all but discard current tile, which just does it) to use bonus
+//----bonuses accrue as user lets them add up. if user already has a bonus, the second one becomes active, etc.
 
 //need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
 
