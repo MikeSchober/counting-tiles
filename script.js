@@ -172,7 +172,7 @@ function toSelect(event) {
 
 
 //function to generate all tiles and return them in an array
-//take as arg... distribution, in order, by number (dist is array containing the number of tiles desired, in order, one-nine)
+//take as arg... distribution, in order, by number (dist is array containing the number of tiles desired, in order, one-the last tile number desired (currently 14). so currently index zero through index 13 in the passed-in array)
 function genTiles(dist) {
 
     //counter that holds latest tile id (starts at zero)
@@ -184,12 +184,13 @@ function genTiles(dist) {
     //holds array of all generated tiles... this is what is returned
     let tileBag = [];
 
+    //UPDATED THIS FOR NEW DISTRIBUTION (1-14)
     //iteration to generate the specified number of tiles by number
-    //iterates through the dist array, producing the specified number of tile objects for each number (1-9)
+    //iterates through the dist array, producing the specified number of tile objects for each number (1-14)
     for (let x of dist) {
 
         val++;
-        console.log(`CURRENT VALUE BE ASSIGNED: ${val}`);
+        console.log(`CURRENT VALUE BEING ASSIGNED: ${val}`);
 
         //for each number, creates the specified number of tile objects and adds them to the t array that will be returned
         for (let i = 0; i < x; i++) {
@@ -553,8 +554,8 @@ function dropTile(e) {
         if (checkAdjacent(origLoc, e.target.parentElement.id)) {
 
 
-            //if the tile obj in the original loc has not yet been combined (dragging into another tile)...
-            if (gameTiles[origLoc[1]][origLoc[3]].combined === false) {
+            //if the tile obj in the original loc has not yet been combined (dragging into another tile) or moved...
+            if (gameTiles[origLoc[1]][origLoc[3]].combined === false && gameTiles[origLoc[1]][origLoc[3]].moved === false) {
 
 
                 //combine tile logic here
@@ -566,7 +567,8 @@ function dropTile(e) {
                 //holds the resulting number from the combo (only allowable if the result is not zero... see checkCombine for the specific logic)
                 let cmbValue = checkCombine(origLoc, e.target.parentElement.id, gameboard);
 
-                if (cmbValue === 3 || cmbValue === 2) {
+                //if cmbValue is anything but zero, the combine operation is allowed...
+                if (cmbValue != 0) {
 
                     //logic for combining tiles
 
@@ -577,10 +579,12 @@ function dropTile(e) {
 
                     //adds the new img
                     let cmbTile = `<img src="images/${cmbValue}cmb.png" alt="combined tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[origLoc[1]][origLoc[3]].id}">`;
+
+                    //inserts the new tile img into the dragged tile's orig position on the gamebaord
                     document.getElementById(origLoc).insertAdjacentHTML("afterbegin", cmbTile);
 
 
-                    //in the tile objs matrix, for the obj at the origLoc, set the combined property = true and the newValue = new combined value (either 2 or 3)
+                    //in the tile objs matrix, for the obj at the origLoc, set the combined property = true and the newValue = new combined value
                     //also changes the moved property to true to prevent subsequent moving (may change this later)
                     //also changes the img path to the correct img
                     gameTiles[origLoc[1]][origLoc[3]].combined = true;
@@ -589,7 +593,7 @@ function dropTile(e) {
                     gameTiles[origLoc[1]][origLoc[3]].image = `images/${gameTiles[origLoc[1]][origLoc[3]].newValue}cmb.png`;
 
 
-                    //in the tile values matrix, for the obj at origLoc, set the value to the new combined value (either 2 or 3)
+                    //in the tile values matrix, for the obj at origLoc, set the value to the new combined value
                     gameboard[origLoc[1]][origLoc[3]] = cmbValue;
 
                     //updating the array that holds the sum of each row's tile values
@@ -807,8 +811,9 @@ function updateMatx(matArr, strt, stp, dfVal) {
 };
 
 
+//UPDATED FOR NEW DISTRIBUTION---NOW RETURNS RESULT OF COMBINE OPERATION, IF ALLOWED. OTHERWISE RETURNS ZERO
 //function to take the ids from both the starting div and the drop target div and to use those id (location) values to take the tile values from the tile values matrix and determine the combined value (9/3 or 4/2)... this then returns the value for use in calling the new img name for the tile display in the original location
-//takes as agrs the string representations of the locations, taken from the ids of the div elements in the html doc (ex: "[5,0]") and the gameboard (tile values array)
+//takes as args the string representations of the locations, taken from the ids of the div elements in the html doc (ex: "[5,0]") and the gameboard (tile values array)
 //returns 2 or 3 if combo allowed, else returns zero (number)
 function checkCombine(start, stop, tVals) {
 
@@ -825,6 +830,7 @@ function checkCombine(start, stop, tVals) {
     let stopY = Number(stop[1]);
     let stopX = Number(stop[3]);
 
+    /* COMMENTED-OUT DUE TO CHANGE IN LOGIC FOR NEW DISTRIBUTION
     //logic to check the values of the tiles being combined. uses the values from passed-in tile values matrix to check for specific values for the tiles that the user is attempting to combine.
     //as of now, only allowing combining of 9/3 and 4/2, resulting in the square root and only works when dragging the larger number into the smaller number, changing the tile value of the larger number
 
@@ -848,9 +854,28 @@ function checkCombine(start, stop, tVals) {
         cmb = 0
 
     }
+    */
 
 
-    //returns the new value for the tile that was dragged into the divisor tile (zero is combine not authorized)
+    //logic to check the values of the tiles being combined. uses the values from passed-in tile values matrix to check for specific values for the tiles that the user is attempting to combine.
+    //with the new distribution (1-14), allowing the combining of any even tile with the tile of exactly half its value. combining this way results in the larger tile being divided in half
+
+    //checking for a valid combo...
+    //if the result of the division between the tile being dragged and the tile with which it is being combined equals two, the combine operation is allowed and the larger tile gets divided in half, resulting in it being assigned the value of the smaller tile
+    if ((tVals[startY][startX]) / (tVals[stopY][stopX]) === 2) {
+
+        cmb = tVals[stopY][stopX];
+        console.log(`legal cmb! cmb = ${cmb}`);
+
+    }
+    //zero if not an authorized combo for combining
+    else {
+
+        cmb = 0
+
+    }
+
+    //returns the new value for the tile that was dragged into the divisor tile (zero if combine not authorized)
     return cmb;
 
 };
@@ -867,7 +892,8 @@ function checkCombine(start, stop, tVals) {
 //GAME INITIATION
 
 //tile bag created
-allTiles = genTiles([14, 14, 4, 4, 4, 5, 5, 14, 14]);
+//UPDATED TO CREATE NEW DISTRIBUTION (1-14)
+allTiles = genTiles([2, 2, 3, 4, 5, 7, 7, 7, 6, 6, 5, 4, 3, 3]);
 
 //total number of generated tiles is stored (number)
 tileNums = allTiles.length;
@@ -926,8 +952,6 @@ remaining = allTiles.length;
 //need to write logic for game-end point summation and summary
 //need to write logic for hiding/displaying the extra info section
 
-//small bug in the code combining tiles logic... allows user to combine a tile after it has been moved bc combine logic doesnt check for the .moved property of the tile obj (maybe just get rid of the combined prop and use moved to determine it's move/combine status?)
-
 
 //finished tasks...
 //tiles created and UI working as designed---done!
@@ -955,6 +979,9 @@ remaining = allTiles.length;
 
 //disable rows when they cant be added to anymore without exceeding 21???---not needed. logic already prevents user from dropping a new tile on top of once already placed and it's always psbl that the user could move or combine tiles to change the situation.---not needed!
 
+//small bug in the code combining tiles logic... allows user to combine a tile after it has been moved bc combine logic doesnt check for the .moved property of the tile obj (maybe just get rid of the combined prop and use moved to determine it's move/combine status?)---fixed!
+//moved tile cannot be combined and a combined tile can not be moved
+//the only way a moved or combined tile can be involved in a combining operation is if it is the tile with which the larger tile is being combined. in this case it's allowed. for example, a tile with the value of two gets moved. then the user puts a four next to it and drags the four over the two to combine them. this is allowed.
 
 
 
