@@ -1112,10 +1112,13 @@ remaining = allTiles.length;
 //progress notes as of 12/2/23...
 
 //need to write logic for bonuses trhat get unlocked as user completes rows of 21
-//need to create buttons for each bonus
+//need to create buttons for each bonus---done!
 //---default is disabled... enabled from top to bottom as user completes rows of 21
 //user clicks button and then clicks in row (if applicable... for all but discard current tile, which just does it) to use bonus
 //----bonuses accrue as user lets them add up. if user already has a bonus, the second one becomes active, etc.
+
+//cl218... need to write logic for remove, change, and wild tile in the toSelect function
+
 
 //need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
 
