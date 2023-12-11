@@ -153,7 +153,7 @@ class Tile {
 function toSelect(event) {
     let element = event.target
 
-    if (element.tagName != 'IMG' && element.className === 'cell') {
+    if (element.tagName != 'IMG' && element.className === 'cell' && wld === false) {
 
         console.log(`tile assigned!`);
 
@@ -220,21 +220,122 @@ function toSelect(event) {
         //functionality for remove clicked tile
         console.log(`remove!`);
 
+        console.log(`target parent element id: ${element.parentElement.id}`);
+
+        //updates the tile values matrix to zero for the removed tile
+        gameboard[Number(element.parentElement.id[1])][Number(element.parentElement.id[3])] = 0;
+
+        //updates the tile objects matrix to undefined for the removed tile
+        gameTiles[Number(element.parentElement.id[1])][Number(element.parentElement.id[3])] = undefined;
+
+        //updating the array that holds the sum of each row's tile values
+        rowSums = rowValues(gameboard);
+
+        //displaying the row sums in the UI
+        showSums(rowSums);
+
+        //removes the tile image from the gameboard
+        element.remove();
+
+
+        //resets the var value
         rem = false;
+
+        //disables the button again
+        remove.disabled = true;
 
     } else if (element.tagName === 'IMG' && element.className === 'pTile' && chg === true) {
 
         //functionality for change clicked tile to 1
         console.log(`change!`);
 
+
+        //updates the tile values matrix to one for the chosen tile
+        gameboard[Number(element.parentElement.id[1])][Number(element.parentElement.id[3])] = 1;
+
+        //updates the tile objects matrix object for the chosen tile
+        //value and image props change
+        //value prop...
+        gameTiles[Number(element.parentElement.id[1])][Number(element.parentElement.id[3])].value = 1;
+
+        //image prop...
+        gameTiles[Number(element.parentElement.id[1])][Number(element.parentElement.id[3])].image = `images/1.png`;
+
+
+        //adds the new img
+        let one = `<img src="images/1.png" alt="special tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[Number(element.parentElement.id[1])][Number(element.parentElement.id[3])].id}">`;
+
+        //inserts the new tile img into the dragged tile's orig position on the gamebaord
+        element.parentElement.insertAdjacentHTML("afterbegin", one);
+
+        //removes the tile image from the gameboard
+        element.remove();
+
+
+        //updating the array that holds the sum of each row's tile values
+        rowSums = rowValues(gameboard);
+
+        //displaying the row sums in the UI
+        showSums(rowSums);
+
+        //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+        checkSum(rowSums, gameTiles, gameboard, 6);
+
+        //resets the var
         chg = false;
 
-    } else if (element.tagName === 'IMG' && element.className === 'pTile' && wld === true) {
+        //disables the button again
+        change.disabled = true;
+
+    } else if (element.tagName != 'IMG' && element.className === 'cell' && wld === true) {
 
         //functionality for wild tile (completes the row its in which it's placed)
         console.log(`wild card!`);
 
+        console.log(`element id for wild!!!: ${element.id}`);
+
+        //placing the currTile on the clicked space on the gameboard
+        let placeWild = `<img src="images/wild.png" alt="WILD TILE" draggable="true" ondragstart="dragTile(event)" class="pTile">`;
+        element.insertAdjacentHTML("afterbegin", placeWild);
+
+        //changes the value of the row in the rowSums matrix to 21
+        rowSums[Number(element.id[1])] = 21;
+
+        console.log(`row sums! : ${rowSums}`);
+
+        //displaying the row sums in the UI
+        showSums(rowSums);
+
+        //clears the completed row of the tile values matrix
+        clrValRow(gameboard, Number(element.id[1]), 6);
+
+        //clears the completed row of the tile objs matrix
+        clrObjRow(gameTiles, Number(element.id[1]), 6);
+
+        //updating the array that holds the sum of each row's tile values
+        rowSums = rowValues(gameboard);
+
+        //displaying the row sums in the UI
+        showSums(rowSums);
+
+        //updating the user's current score... adds 21 pts!
+        score = score + 21;
+
+        //updating the score disolay in the ui
+        let viewScore = `<h3>Current score: ${score}</h3>`;
+        scr.removeChild(scr.children[0]);
+        scr.insertAdjacentHTML("afterbegin", viewScore);
+
+        ///setTimeout function calls function to clear the row in the ui after 3 seconds...
+        setTimeout(clrUserRow, 3000, Number(element.id[1]), 6);
+
+
+        //resets the var
         wld = false;
+
+        //disables the button again
+        wild.disabled = true;
+
 
     }
 };
@@ -447,6 +548,8 @@ function showSums(theSums) {
 };
 
 
+//messed with the clrUserRow() function when added wild tile functionality... if error when clearing user row for actual full row, check here first!!!
+
 //function to clear a completed row in the ui
 //takes as args the index of the row to clear (number) and the number of columns in the table (number)
 function clrUserRow(rowInd, colmns) {
@@ -461,8 +564,13 @@ function clrUserRow(rowInd, colmns) {
         //selects the current cell of the row we are clearing
         let currC = document.getElementById(`[${rowInd},${c}]`)
 
-        //removes the img from the cell
-        currC.removeChild(currC.firstChild);
+        //checking for children (had to add this logic when added this function to the special powers for wild tile)
+        if (currC.hasChildNodes()) {
+
+            //removes the img from the cell
+            currC.removeChild(currC.firstChild);
+
+        }
 
     }
 
@@ -564,7 +672,7 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 updateBonus(bonuses);
 
                 //actives the bonuses as needed
-                actBonus(bonuses);
+                actBonus(bonuses, powers);
 
 
                 //style it with special style for 3 seconds...
@@ -655,6 +763,9 @@ function pOne() {
     discarded = tileNums - (allTiles.length + placed + 1);
     console.log(`discarded: ${discarded}`);
 
+    //disables the button
+    discard.disabled = true;
+
 };
 
 
@@ -662,7 +773,12 @@ function pOne() {
 //remove any tile and deactivate the button
 function pTwo() {
 
+    //enables the functionality within the toSelect function
     rem = true;
+
+    //ensures that the other two special power functionality are disbaled
+    chg = false;
+    wld = false;
 
 };
 
@@ -670,7 +786,12 @@ function pTwo() {
 //change any tile value to 1 and deactivate the button
 function pThree() {
 
+    //enables the functionality within the toSelect function
     chg = true;
+
+    //ensures that the other two special power functionality are disbaled
+    rem = false;
+    wld = false;
 
 };
 
@@ -678,7 +799,12 @@ function pThree() {
 //wild cald tile---complete any row and deactivate the button
 function pFour() {
 
+    //enables the functionality within the toSelect function
     wld = true;
+
+    //ensures that the other two special power functionality are disbaled
+    rem = false;
+    chg = false;
 
 };
 
@@ -1113,7 +1239,7 @@ remaining = allTiles.length;
 
 //need to write logic for bonuses trhat get unlocked as user completes rows of 21
 //need to create buttons for each bonus---done!
-//---default is disabled... enabled from top to bottom as user completes rows of 21
+//---default is disabled... enabled from top to bottom as user completes rows of 21---done!
 //user clicks button and then clicks in row (if applicable... for all but discard current tile, which just does it) to use bonus
 //----bonuses accrue as user lets them add up. if user already has a bonus, the second one becomes active, etc.
 
