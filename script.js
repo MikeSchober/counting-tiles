@@ -189,7 +189,7 @@ function toSelect(event) {
         //<h3 class="score">Current score: </h3>
 
         //updating the score disolay in the ui
-        let viewScore = `<h3>Current score: ${score}</h3>`;
+        let viewScore = `<h1>${score}</h1>`;
         scr.removeChild(scr.children[0]);
         scr.insertAdjacentHTML("afterbegin", viewScore);
 
@@ -322,7 +322,7 @@ function toSelect(event) {
         score = score + 21;
 
         //updating the score disolay in the ui
-        let viewScore = `<h3>Current score: ${score}</h3>`;
+        let viewScore = `<h1>${score}</h1>`;
         scr.removeChild(scr.children[0]);
         scr.insertAdjacentHTML("afterbegin", viewScore);
 
@@ -664,7 +664,7 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 score = score + 21;
 
                 //updating the score disolay in the ui
-                let viewScore = `<h3>Current score: ${score}</h3>`;
+                let viewScore = `<h1>${score}</h1>`;
                 scr.removeChild(scr.children[0]);
                 scr.insertAdjacentHTML("afterbegin", viewScore);
 
@@ -1157,7 +1157,7 @@ function checkCombine(start, stop, tVals) {
 
     //checking for a valid combo...
     //if the modulus between the tile being dragged and the tile with which it is being combined equals zero, the combine operation is allowed, division of the larger tile by the smaller tile is executed, and the larger tile takes on the quotient
-    if ((tVals[startY][startX]) % (tVals[stopY][stopX]) === 0) {
+    if (((tVals[startY][startX]) % (tVals[stopY][stopX]) === 0) && ((tVals[startY][startX]) / (tVals[stopY][stopX]) != 1)) {
 
         cmb = (tVals[startY][startX]) / (tVals[stopY][stopX]);
         console.log(`legal cmb! cmb = ${cmb}`);

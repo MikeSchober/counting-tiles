@@ -18,17 +18,22 @@
 
     <!--header holds game title and an about link-->
     <header>
-        <h1>JavaScript Game!</h1>
-        <a href="url">ABOUT</a>
+        <div class="gameTitle"><img src="images/title.png" alt="Counting Tiles Game" class="titleText"></div>
+        <div class="gameScore"><img src="images/score.png" alt="score" class="scoreImg"></div>
+        <div id="score">
+            <h1>0</h1>
+        </div>
+
+
     </header>
 
     <!--container to hold the elements in the UI-->
     <div class="container">
 
         <!--header over the gameboard container to hold score at the top of the gameboard... will need to be justified over the gameboard-->
-        <header id="score">
+        <!-- <header id="score">
             <h3>Current score: 0</h3>
-        </header>
+        </header> -->
 
         <!--gameplay container to hold all gameplay elements... gameboard, current tile, extras (will be flex column display)-->
         <div class="gameplay">
@@ -109,10 +114,7 @@
 
                 <!--container to hold image of psbl actions-->
                 <div class="psblActions">
-                    <h3>PLACE (TAP/CLICK)</h3>
-                    <h3>COMBINE (DRAG AND DROP)</h3>
-                    <h3>MOVE (DRAG AND DROP)</h3>
-                    <h3>RANDOM! (CLICK HERE!)</h3>
+                    <img src="images/actions.png" alt="ACTIONS AVAILABLE" class="gameActions">
                 </div>
 
 
@@ -131,39 +133,32 @@
                     <button type="button" disabled="true" id="wild"><strong>WILD CARD -- COMPLETES
                             ROW</strong></button>
                 </div>
-
-
-            </div>
-
-            <!--container to hold the tile numbers and point values cheat sheet image-->
-            <div class="extra">
-
                 <!--container for the number of tiles placed, etc.-->
                 <div class="tileNums">
-                    <h3 class="nums" id="placed">TILES PLACED</h3>
-                    <h3 class="nums" id="disc">TILES DISCARDED</h3>
-                    <h3 class="nums" id="remain">TILES REMAINING TO BE DRAWN</h3>
-                    <h3>COMPLETED ROWS:</h3>
+                    <div><img src="images/compRows.png" alt="completed rows" class="gameRows"></div>
+                    <div id="rowsDone">
+                        <p>0</p>
+                    </div>
+
+
                 </div>
 
-                <!--NOT DOING THIS NOW---container for the point values cheat sheet image-->
-                <div class="ptValues">
-                </div>
 
             </div>
 
+
         </div>
-
-
-    </div>
-    <footer class="license">
-        <h4>Copyright (c) 2023 Mike Schober</h4><br>
-        <h4> The tile font is a font called "Acme". Copyright (c) 2011, Juan Pablo del Peral. <a
-                href="license.html">Click
-                here for the full
-                font license</a>
-        </h4>
-    </footer>
+        <footer class="license">
+            <h4>Copyright (c) 2023 Mike Schober</h4><br>
+            <h4> The tile font is a font called "Acme". Copyright (c) 2011, Juan Pablo del Peral. <a
+                    href="license.html">Click
+                    here for the full
+                    font license</a>
+            </h4>
+            <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" id="priv">GitHub
+                privacy
+                statement</a>
+        </footer>
 
 </body>
 
