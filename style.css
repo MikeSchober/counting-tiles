@@ -282,3 +282,174 @@ button:disabled {
 
 
 /*for responsive design... less than width of 1190 needs to be adjusted to column display*/
+
+
+/*ipad is max width of 1024px... so anything less than that gets formatted with the following styling code... top-nav hidden, top-menu displayed*/
+@media screen and (max-width: 1190px) {
+
+
+    header {
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        /* border: 2px solid black; */
+        height: 40px;
+        width: 650px;
+        color: black;
+        margin-top: 32px;
+        margin-left: 102px;
+    }
+
+    .gameScore {
+
+        margin-left: 41%;
+        /* border: 2px solid black; */
+
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    .gameplay {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        /* align-content: flex-start;
+        margin: -10px 100px; */
+
+    }
+
+    .play {
+        align-self: flex-start;
+        border: 4px solid black;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        margin-left: 30px;
+        margin-top: 20px;
+    }
+
+
+    .psblActions {
+        display: none;
+
+    }
+
+    .tileNums {
+        display: none;
+
+    }
+
+}
+
+
+
+/*ipad is max width of 1024px... so anything less than that gets formatted with the following styling code... top-nav hidden, top-menu displayed*/
+@media screen and (max-width: 760px) {
+
+    html {
+        overflow: scroll;
+    }
+
+
+    .psblActions {
+        display: none;
+
+    }
+
+    .tileNums {
+        display: none;
+
+    }
+
+
+    header {
+        height: 40px;
+        width: 650px;
+        color: black;
+        margin-top: 7%;
+        margin-left: 13%;
+    }
+
+    .gameScore {
+
+        margin-left: 41%;
+        /* border: 2px solid black; */
+
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    .gameplay {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-left: 10%;
+        margin-top: 3%;
+        /* align-content: flex-start;
+        margin: -10px 100px; */
+
+    }
+
+    .play {
+        align-self: flex-start;
+        border: 4px solid black;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        margin-left: 25%;
+        margin-top: 20px;
+    }
+
+
+    .currTile {
+        height: 175px;
+        width: 175px;
+        margin-bottom: 10px;
+        margin: 0 auto;
+
+    }
+
+    .currTile img {
+
+        max-height: 140px;
+        max-width: 140px;
+
+    }
+
+    button {
+        font-size: 16px;
+        width: 280px;
+        height: 50px;
+        margin-top: 3px;
+
+    }
+
+
+    .license {
+        margin-top: 5%;
+        margin-left: 20%;
+        /* display: inline; */
+        padding-left: 0px;
+        padding-bottom: 5%;
+        text-wrap: wrap;
+        width: 400px;
+
+    }
+}

@@ -66,6 +66,22 @@ let chg = false;
 //for wild tile...
 let wld = false;
 
+///
+
+//holds the number of each bonus used
+
+//tile discarded
+let numDiscard = 0;
+
+//tile removed
+let numRemoved = 0;
+
+//tile changed to 1
+let numChanged = 0;
+
+//wild tile
+let numWild = 0;
+
 ///////
 
 
@@ -78,6 +94,8 @@ let curr = document.getElementById("currTile");
 
 //holds score display in the ui
 let scr = document.getElementById("score");
+
+let rs = document.getElementById("rowsDone");
 
 
 //special power buttons!
@@ -195,6 +213,9 @@ function toSelect(event) {
 
         //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
         checkSum(rowSums, gameTiles, gameboard, 6);
+
+        //checking for game end
+        checkEnd(placed, completedRows, numRemoved, 42);
 
         //removing the currTile from the current tile display so that the next tile can be shown
         curr.removeChild(curr.firstChild);
@@ -320,6 +341,15 @@ function toSelect(event) {
 
         //updating the user's current score... adds 21 pts!
         score = score + 21;
+
+        //updating the number of completed rows in the var
+        completedRows++;
+
+        //updating the completed rows count in the ui
+        let viewRows = `<p>${completedRows}<p>`;
+        rs.removeChild(rs.children[0]);
+        rs.insertAdjacentHTML("afterbegin", viewRows);
+
 
         //updating the score disolay in the ui
         let viewScore = `<h1>${score}</h1>`;
@@ -663,6 +693,14 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 //updating the user's current score... adds 21 pts!
                 score = score + 21;
 
+                //updating the number of completed rows in the var
+                completedRows++;
+
+                //updating the completed rows count in the ui
+                let viewRows = `<p>${completedRows}<p>`;
+                rs.removeChild(rs.children[0]);
+                rs.insertAdjacentHTML("afterbegin", viewRows);
+
                 //updating the score disolay in the ui
                 let viewScore = `<h1>${score}</h1>`;
                 scr.removeChild(scr.children[0]);
@@ -734,6 +772,38 @@ function actBonus(b, p) {
 
 };
 
+//function to check for game end
+//takes placed tiles var and completedRows var as args (numbers), as well as the number of squares on the board (currently 42) (number also) and the number of removed tile bonuses used (number)
+//need to be done after each tile is placed
+//displays game end modal when it finds full board
+function checkEnd(p, c, r, sq) {
+
+    //checking for game end using the args
+    //when the number of tiles on the board is within 6*numWild (to account for extra removed tiles by the bonus), checks for full gamebaord
+    if ((sq - (p - ((c * 7) + r))) <= (numWild * 7)) {
+
+        for (let x of gameboard) {
+
+            for (let y of x) {
+
+                if (y === 0) {
+
+                    console.log(`not complete`);
+                    return;
+
+                }
+
+            }
+
+        }
+
+        //display game end modal
+        console.log(`game end!`);
+
+    }
+
+};
+
 //callback functions for the bonus buttons!!!
 
 //discard current tile and deactivate the button
@@ -763,6 +833,9 @@ function pOne() {
     discarded = tileNums - (allTiles.length + placed + 1);
     console.log(`discarded: ${discarded}`);
 
+    //increments the bonus count
+    numDiscard++;
+
     //disables the button
     discard.disabled = true;
 
@@ -780,6 +853,9 @@ function pTwo() {
     chg = false;
     wld = false;
 
+    //increments the bonus count
+    numRemoved++;
+
 };
 
 
@@ -793,6 +869,9 @@ function pThree() {
     rem = false;
     wld = false;
 
+    //increments the bonus count
+    numChanged++;
+
 };
 
 
@@ -805,6 +884,9 @@ function pFour() {
     //ensures that the other two special power functionality are disbaled
     rem = false;
     chg = false;
+
+    //increments the bonus count
+    numWild++;
 
 };
 
