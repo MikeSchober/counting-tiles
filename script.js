@@ -1318,25 +1318,13 @@ remaining = allTiles.length;
 
 
 //progress notes as of 12/2/23...
-
-//need to write logic for bonuses trhat get unlocked as user completes rows of 21
-//need to create buttons for each bonus---done!
-//---default is disabled... enabled from top to bottom as user completes rows of 21---done!
-//user clicks button and then clicks in row (if applicable... for all but discard current tile, which just does it) to use bonus
-//----bonuses accrue as user lets them add up. if user already has a bonus, the second one becomes active, etc.
-
-//cl218... need to write logic for remove, change, and wild tile in the toSelect function
-
-
 //need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
 
+//write logic in toSelect to check for game end (full board... indicated by gameboard objects matrix being full (no undefined values in it))---done!
+//----need to write code for the game end modal---goes in checkEnd() function
+//----need to write logic for game-end point summation and summary
+//---game end stats... # completed row, # placed tiles, # discarded tiles, # tiles combined, # tiles moved, total reduction in points by combining tiles, avg drawn tile value vs distribution avg, # of bonuses used, total points!
 
-//write logic in toSelect to check for game end (full board... indicated by gameboard objects matrix being full (no undefined values in it))
-
-//need to write logic for placement of random tile in random space (using the currenttile logic previously used, with random placement choice... new function with a new random value generator)
-
-//need to write logic for game-end point summation and summary
-//need to write logic for hiding/displaying the extra info section
 
 
 //finished tasks...
@@ -1368,6 +1356,17 @@ remaining = allTiles.length;
 //small bug in the code combining tiles logic... allows user to combine a tile after it has been moved bc combine logic doesnt check for the .moved property of the tile obj (maybe just get rid of the combined prop and use moved to determine it's move/combine status?)---fixed!
 //moved tile cannot be combined and a combined tile can not be moved
 //the only way a moved or combined tile can be involved in a combining operation is if it is the tile with which the larger tile is being combined. in this case it's allowed. for example, a tile with the value of two gets moved. then the user puts a four next to it and drags the four over the two to combine them. this is allowed.
+
+//cl218... need to write logic for remove, change, and wild tile in the toSelect function---done!!!
+
+//need to write logic for bonuses that get unlocked as user completes rows of 21---done!!!
+//need to create buttons for each bonus---done!
+//---default is disabled... enabled from top to bottom as user completes rows of 21---done!
+//user clicks button and then clicks in row (if applicable... for all but discard current tile, which just does it) to use bonus
+//----bonuses accrue as user lets them add up. if user already has a bonus, the second one becomes active, etc.
+
+//need to write logic for placement of random tile in random space (using the currenttile logic previously used, with random placement choice... new function with a new random value generator)---no longer planning this!
+
 
 
 
