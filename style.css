@@ -26,7 +26,7 @@ header {
     flex-wrap: nowrap;
     flex-direction: row;
     /* border: 2px solid black; */
-    height: 40px;
+    height: 30px;
     width: 650px;
     color: black;
     margin-top: 32px;
@@ -48,36 +48,6 @@ header h1 {
 }
 
 
-/*links as buttons
-header a:link {
-    color: black;
-    font-size: 17px;
-    font-weight: bold;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-    padding: 10px 10px;
-    margin-top: 3px;
-}
-
-header a:visited {
-    color: black;
-    text-decoration: none;
-}
-
-header a:hover {
-    color: #F2F1E8;
-    text-decoration: none;
-    background-color: #4C5D70;
-
-}
-
-header a:active {
-    color: #4C5D70;
-    text-decoration: none;
-    background-color: #E34234;
-}
-*/
 
 .gameplay {
     display: flex;
@@ -305,6 +275,7 @@ button:disabled {
 
     header {
         margin-bottom: 15px;
+        height: 40px;
     }
 
     .currTile {
