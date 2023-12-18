@@ -7,7 +7,8 @@
 let game = true;
 
 //holds current score (number)
-let score = 0;
+//starts negative to offset the automatic updating of the random placing function at game initiation
+let score = -100;
 
 //holds gameboard tile value matrix (array and arrays)
 let gameboard;
@@ -210,7 +211,7 @@ function toSelect(event) {
         console.log(`discarded: ${discarded}`);
 
         //updating the user's current score
-        score++;
+        score = score + 10;
         //<h3 class="score">Current score: </h3>
 
         //updating the score disolay in the ui
@@ -347,7 +348,7 @@ function toSelect(event) {
         showSums(rowSums);
 
         //updating the user's current score... adds 21 pts!
-        score = score + 21;
+        score = score + 350;
 
         //updating the number of completed rows in the var
         completedRows++;
@@ -698,7 +699,7 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 showSums(rowSums);
 
                 //updating the user's current score... adds 21 pts!
-                score = score + 21;
+                score = score + 350;
 
                 //updating the number of completed rows in the var
                 completedRows++;
@@ -935,8 +936,10 @@ function findOpen(v) {
 
 ///callback function for placing random tile
 //will get called by setTimeout() at 20 second intervals to place random tile on the gameboard
-//takes are args the gameboard array (vals === values array) and the allTiles array (ts === array that holds all the remaining game tiles to be drawn)---takes no args!
+//could add if statement within this function to allow pause functionality... left out for now
 function placeRandom() {
+
+    //could always add if statement --- if (drawing === true) {then all the code in this function executes... this would allow us to pause the auto-placement functionality before/during gameplay}
 
     //draws random tile
 
@@ -990,6 +993,16 @@ function placeRandom() {
 
     //displaying the row sums in the UI
     showSums(rowSums);
+
+    //updating the user's current score
+    score = score + 10;
+    //<h3 class="score">Current score: </h3>
+
+    //updating the score disolay in the ui
+    let viewScore = `<h1>${score}</h1>`;
+    scr.removeChild(scr.children[0]);
+    scr.insertAdjacentHTML("afterbegin", viewScore);
+
 
     //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
     checkSum(rowSums, gameTiles, gameboard, 6);
@@ -1444,19 +1457,19 @@ dispTile();
 remaining = allTiles.length;
 
 //logic to place random tiles at set interval... currently 20 seconds
-while (drawing === true) {
-
-    setTimeout(placeRandom, 2000);
-
-};
+// setInterval(placeRandom, 20000);
 
 
 ///////
 
 
 
-//progress notes as of 12/2/23...
+//progress notes as of 12/18/23...
 //need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
+
+//updated logic to include randomly-placed tiles at set intervals, as well as starting with 10 tiles randomly-placed on the board
+//game rules written. need to make graphic to display rules before game start
+//need to create game-end modal
 
 //write logic in toSelect to check for game end (full board... indicated by gameboard objects matrix being full (no undefined values in it))---done!
 //----need to write code for the game end modal---goes in checkEnd() function

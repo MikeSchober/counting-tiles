@@ -1,0 +1,32 @@
+Welcome to Counting Tiles!
+
+Objective: strategically place tiles in an attempt to reach row values of 21
+
+It's harder than it sounds!
+
+The gameboard automatically starts with ten tiles placed. Every 20 seconds, a new tile is placed randomly
+in an open space on the board. To achieve row values of 21, tiles can be placed on the gameboard, moved, or combined with each other. 
+
+PLACING TILES
+The currently-drawn tile appears adjacent to the gameboard. This tile can be placed in any open space on the board. Once placed, a new tile is drawn.
+
+MOVING TILES
+Tiles can be moved to an adjacent square (no diagonal), but each tile can only be moved once. When a tile is moved, the currently-drawn tile is automatically discarded and a new tile is drawn.
+
+COMBINING TILES
+Tiles can be combined with adjacent tiles of lower values by which they are evenly divisible. As a result
+of combining, the tile being combined takes on the quotient value of the combining operation. For example, 
+tile A has a value of 10 and tile B has a value of 5. Tile A can be combined with tile B. Tile A now reflects the quotient value of 2. Once tiles are combined, they cannot be moved or combined any further. A combined tile, however, can be still used as the tile by which a tile of larger value is combined. When a tile is combined, the currently-drawn tile is automatically discarded and a new tile is drawn.
+
+COMPLETING A ROW
+To complete a row, the row must be completely filled and the sum of the tile values in the row must be exactly 21. As rows are completed, the tiles in the completed row are cleared and bonuses are unlocked. The bonuses can be used at any time in future gameplay and they unlock from top to bottom. If bonus one goes unused, bonus two gets unlocked on the next completed row. Once unlocked, the bonuses can be used in any order.
+
+TILE COLORS
+Randomly-placed tiles have a rose-colored background. 
+Manually-placed tiles have a beige background. 
+Moved tiles have a light blue background.
+Combined tiles have a darker blue background.
+
+Scoring: 10 points for each tile that is placed, 350 points for each completed row of 21
+
+Game end: The game ends when the board is completely full.
