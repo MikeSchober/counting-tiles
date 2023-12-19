@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counting Tiles gameplay</title>
+
+    <style>
+        html {
+            background: #f3eec4;
+            background-size: cover;
+        }
+
+        * {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        body {
+
+            margin-top: 10px;
+
+        }
+
+        #screenOne {
+
+            margin: 10px 25px;
+            rotate: -3deg;
+            border-radius: 25px;
+        }
+
+        #c1 {
+            margin: 10px 25px;
+            rotate: 5deg;
+        }
+
+        #c2 {
+            margin: 10px 25px;
+            rotate: -3deg;
+
+        }
+
+        #c3 {
+            margin: 10px 25px;
+            rotate: -7deg;
+
+        }
+
+        #c4 {
+            margin: 10px 25px;
+            rotate: 7deg;
+
+        }
+
+        ul {
+
+            list-style-type: none;
+            font-weight: bold;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="index.html">Back to game</a>
+    </header>
+
+    <h2>Welcome to Counting Tiles!</h2>
+    <img id="screenOne" src="images/s5.png" alt="screenshot" height="311px" width="289px">
+    <h2>Objective: To strategically place tiles in an attempt to reach row values of 21</h2>
+    <h2>It's harder than it sounds!</h2>
+    <p id="fl">The gameboard automatically starts with ten tiles placed. Every 20 seconds, a new tile is placed randomly
+        in an open space on the board. To achieve row values of 21, tiles can be placed on the gameboard, moved, or
+        combined with each other. </p>
+
+    <h3>PLACING TILES</h3>
+    <p>The currently-drawn tile appears adjacent to the gameboard. This tile can be placed in any open space on the
+        board. Once placed, a new tile is drawn.
+    </p>
+
+    <h3>MOVING TILES</h3>
+    <p>Tiles can be moved to an adjacent square (not diagonally), but each tile can only be moved once. When a tile is
+        moved, the currently-drawn tile is automatically discarded and a new tile is drawn.</p>
+
+    <h3>COMBINING TILES</h3>
+    <p>Tiles can be combined with adjacent tiles of lower values by which they are evenly divisible. As a result
+        of combining, the tile being combined takes on the quotient value of the combining operation. For example,
+        tile A has a value of 10 and tile B has a value of 5. Tile A can be combined with tile B. Tile A now reflects
+        the quotient value of 2. Once tiles are combined, they cannot be moved or combined any further. A combined tile,
+        however, can be still used as the tile by which a tile of larger value is divided. When a tile is combined, the
+        currently-drawn tile is automatically discarded and a new tile is drawn.</p>
+
+    <h3>COMPLETING A ROW</h3>
+    <p>For a row to be completed, it must be completely filled and the sum of the tile values in the row must be exactly
+        21. When a row is completed, the tiles in the completed row are cleared and a bonus is unlocked. The bonuses can
+        be used at any time in future gameplay and they unlock from top to bottom. If the first bonus goes unused, the
+        second bonus gets unlocked when the next row is completed. Once unlocked, the bonuses can be used in any order.
+    </p>
+
+    <h3>TILE COLORS</h3>
+    <ul>
+        <li>Randomly-placed tiles have a rose-colored background.</li>
+        <img id="c1" src="images/r3.png" alt="screenshot" height="97px" width="97px">
+        <li>Manually-placed tiles have a beige background.</li>
+        <img id="c2" src="images/7.png" alt="screenshot" height="97px" width="97px">
+        <li>Moved tiles have a light blue background.</li>
+        <img id="c3" src="images/13mvd.png" alt="screenshot" height="97px" width="97px">
+        <li>Combined tiles have a darker blue background.</li>
+        <img id="c4" src="images/10cmb.png" alt="screenshot" height="97px" width="97px">
+    </ul>
+
+    <h3>Scoring: 10 points for each tile that is placed, 350 points for each completed row of 21</h3>
+
+    <h3>Game end: The game ends when the board is completely full.</h3>
+
+    <footer>
+        <a href="index.html">Back to game</a>
+    </footer>
+
+
+</body>
+
+</html>

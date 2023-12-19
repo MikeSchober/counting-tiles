@@ -60,8 +60,8 @@ let bonuses = [0, 0, 0, 0];
 let randTiles = 0;
 
 //holds boolean value that determines whether or not randomly-drawn tiles are currently being placed at set interval
-//default is false. set to true when user starts game
-let drawing = false;
+//default is true but set to false after initial gameboard set
+let drawing = true;
 
 //vars to hold status for toSelect functionality for bonus application
 
@@ -97,6 +97,14 @@ let numWild = 0;
 ///////
 //DOM ELEMENTS
 
+//gamestart modal
+let startModal = document.getElementById("introModal");
+
+//start button in the gamestart modal
+let startButton = document.getElementById("startPlay");
+
+
+
 //holds the current tile display div in the html doc
 let curr = document.getElementById("currTile");
 
@@ -130,6 +138,9 @@ let powers = [discard, remove, change, wild];
 
 ///////
 //EVENT LISTENERS
+
+//modal listeners
+startButton.addEventListener('click', startRandom);
 
 
 //event listener for general click
@@ -940,83 +951,93 @@ function findOpen(v) {
 function placeRandom() {
 
     //could always add if statement --- if (drawing === true) {then all the code in this function executes... this would allow us to pause the auto-placement functionality before/during gameplay}
+    if (drawing === true) {
 
-    //draws random tile
+        //draws random tile
 
-    //random tile index chosen
-    let randChoice = drawIndex(allTiles.length);
+        //random tile index chosen
+        let randChoice = drawIndex(allTiles.length);
 
-    //next tile drawn
-    let r = allTiles[randChoice];
+        //next tile drawn
+        let r = allTiles[randChoice];
 
-    //removing the drawn tile from the tile bag
-    allTiles = rmvTile(allTiles, randChoice);
+        //removing the drawn tile from the tile bag
+        allTiles = rmvTile(allTiles, randChoice);
 
-    //total number of remaining tiles to be drawn is updated
-    remaining = allTiles.length;
-    console.log(`tiles remaining to be drawn: ${remaining}`);
-
-
-    //iterates through the tile values array to create an array of coordinates for all the open spaces. coords are held in an array of strings to work with the IDs in the html doc (ex: '[1,2]')
-    let allOpen = findOpen(gameboard);
-
-    //generates random number between zero and the length of the coords array
-    // drawIndex(allOpen.length);
+        //total number of remaining tiles to be drawn is updated
+        remaining = allTiles.length;
+        console.log(`tiles remaining to be drawn: ${remaining}`);
 
 
-    //grabs the coordinates at the random number's index in the coords array
-    let c = allOpen[drawIndex(allOpen.length)];
+        //iterates through the tile values array to create an array of coordinates for all the open spaces. coords are held in an array of strings to work with the IDs in the html doc (ex: '[1,2]')
+        let allOpen = findOpen(gameboard);
 
-    console.log(`chosen coords: ${c}`);
-
-    //grabs div at the chosen coords
-    let tgt = document.getElementById(c);
-
-    //places the chosen tile at the chosen location on the ui
-
-    //placing the currTile on the clicked space on the gameboard
-    let placingRandom = `<img src="images/r${r.value}.png" alt="random tile" draggable="true" ondragstart="dragTile(event)" class="rTile" id="tile${r.id}">`;
-    tgt.insertAdjacentHTML("afterbegin", placingRandom);
-
-    //updates random tile counter
-    randTiles++;
-    console.log(`number of random tiles placed: ${randTiles}`);
-
-    //updating the gameboard tile values matrix
-    gameboard[c[1]][c[3]] = r.value;
-
-    //updating the gameboard tile objects matrix
-    gameTiles[c[1]][c[3]] = r;
-
-    //updating the array that holds the sum of each row's tile values
-    rowSums = rowValues(gameboard);
-
-    //displaying the row sums in the UI
-    showSums(rowSums);
-
-    //updating the user's current score
-    score = score + 10;
-    //<h3 class="score">Current score: </h3>
-
-    //updating the score disolay in the ui
-    let viewScore = `<h1>${score}</h1>`;
-    scr.removeChild(scr.children[0]);
-    scr.insertAdjacentHTML("afterbegin", viewScore);
+        //generates random number between zero and the length of the coords array
+        // drawIndex(allOpen.length);
 
 
-    //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
-    checkSum(rowSums, gameTiles, gameboard, 6);
+        //grabs the coordinates at the random number's index in the coords array
+        let c = allOpen[drawIndex(allOpen.length)];
 
-    //checking for game end
-    checkEnd(placed, completedRows, numRemoved, 42);
+        console.log(`chosen coords: ${c}`);
 
+        //grabs div at the chosen coords
+        let tgt = document.getElementById(c);
+
+        //places the chosen tile at the chosen location on the ui
+
+        //placing the currTile on the clicked space on the gameboard
+        let placingRandom = `<img src="images/r${r.value}.png" alt="random tile" draggable="true" ondragstart="dragTile(event)" class="rTile" id="tile${r.id}">`;
+        tgt.insertAdjacentHTML("afterbegin", placingRandom);
+
+        //updates random tile counter
+        randTiles++;
+        console.log(`number of random tiles placed: ${randTiles}`);
+
+        //updating the gameboard tile values matrix
+        gameboard[c[1]][c[3]] = r.value;
+
+        //updating the gameboard tile objects matrix
+        gameTiles[c[1]][c[3]] = r;
+
+        //updating the array that holds the sum of each row's tile values
+        rowSums = rowValues(gameboard);
+
+        //displaying the row sums in the UI
+        showSums(rowSums);
+
+        //updating the user's current score
+        score = score + 10;
+        //<h3 class="score">Current score: </h3>
+
+        //updating the score disolay in the ui
+        let viewScore = `<h1>${score}</h1>`;
+        scr.removeChild(scr.children[0]);
+        scr.insertAdjacentHTML("afterbegin", viewScore);
+
+
+        //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+        checkSum(rowSums, gameTiles, gameboard, 6);
+
+        //checking for game end
+        checkEnd(placed, completedRows, numRemoved, 42);
+
+    } else {
+        return;
+    }
 
 };
 
 
 //the abv function will be called by setTimesout() to place random tiles at set intervals during gameplay and it will also be called nine times at game initiation to place nine tiles randomly before game start
 
+//function to start the placing of random tiles (startgame)
+function startRandom() {
 
+    drawing = true;
+    startModal.classList.add('hidden');
+
+};
 
 
 
@@ -1431,6 +1452,8 @@ for (let i = 0; i < 10; i++) {
 
 };
 
+//sets drawing back to false once gameboard set
+drawing = false;
 
 ///////
 
@@ -1457,7 +1480,7 @@ dispTile();
 remaining = allTiles.length;
 
 //logic to place random tiles at set interval... currently 20 seconds
-// setInterval(placeRandom, 20000);
+setInterval(placeRandom, 20000);
 
 
 ///////
