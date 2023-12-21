@@ -4,11 +4,15 @@
 //GLOBAL VARS//
 
 //holds playing status (bool)
-let game = true;
+//can likely remove... not using
+// let game = true;
 
 //holds current score (number)
 //starts negative to offset the automatic updating of the random placing function at game initiation
 let score = -100;
+
+//holds high score, if user plays several times
+let highScore = 0;
 
 //holds gameboard tile value matrix (array and arrays)
 let gameboard;
@@ -26,7 +30,8 @@ let currTileInd;
 let currTile;
 
 //holds number of each acheived sequence (map... seq name:# of that seq)
-let sequences = new Map();
+//can likely delete... not using
+// let sequences = new Map();
 
 //holds all available tiles (array)
 let allTiles;
@@ -103,7 +108,14 @@ let startModal = document.getElementById("introModal");
 //start button in the gamestart modal
 let startButton = document.getElementById("startPlay");
 
+//game end modal
+let endModal = document.getElementById("endModal");
 
+//game end modal content
+let endMsg = document.getElementById("finalScore");
+
+//play again button in end modal
+let againButton = document.getElementById("playAgain");
 
 //holds the current tile display div in the html doc
 let curr = document.getElementById("currTile");
@@ -142,6 +154,7 @@ let powers = [discard, remove, change, wild];
 //modal listeners
 startButton.addEventListener('click', startRandom);
 
+againButton.addEventListener('click', gameReset);
 
 //event listener for general click
 //toSelect() callback function uses event.target to get the id from the clicked element and, if it is a <TH> element, displays a modal to show that column's taf data
@@ -234,7 +247,7 @@ function toSelect(event) {
         checkSum(rowSums, gameTiles, gameboard, 6);
 
         //checking for game end
-        checkEnd(placed, completedRows, numRemoved, 42);
+        checkEnd(placed, randTiles, completedRows, numRemoved, 42);
 
         //removing the currTile from the current tile display so that the next tile can be shown
         curr.removeChild(curr.firstChild);
@@ -795,11 +808,11 @@ function actBonus(b, p) {
 //takes placed tiles var and completedRows var as args (numbers), as well as the number of squares on the board (currently 42) (number also) and the number of removed tile bonuses used (number)
 //need to be done after each tile is placed
 //displays game end modal when it finds full board
-function checkEnd(p, c, r, sq) {
+function checkEnd(p, rand, c, r, sq) {
 
     //checking for game end using the args
     //when the number of tiles on the board is within 6*numWild (to account for extra removed tiles by the bonus), checks for full gamebaord
-    if ((sq - (p - ((c * 7) + r))) <= (numWild * 7)) {
+    if ((sq - ((p + rand) - ((c * 7) + r))) <= (numWild * 7)) {
 
         for (let x of gameboard) {
 
@@ -817,11 +830,154 @@ function checkEnd(p, c, r, sq) {
         }
 
         //display game end modal
+
+        //stops the random placements
+        drawing = false;
+
+        //records score as high score if it's higher than current
+        if (score > highScore) {
+            highScore = score;
+        };
+
+        //updating the modal to show the final score
+        let endScore = `<div><h3>Game over!</h3>
+        <br>
+        <h4>Final score: ${score}</h4>
+        <br>
+        <h3>Nice job!</h3>
+        <br></div>`;
+        endMsg.removeChild(endMsg.children[0]);
+        endMsg.insertAdjacentHTML("afterbegin", endScore);
+
+
+        //displaying the modal
+        endModal.classList.remove('hidden');
+
         console.log(`game end!`);
 
     }
 
 };
+
+
+//function to reset the game
+function gameReset() {
+
+    //score reset
+    score = -100;
+
+    //holds the number of random tiles placed
+    randTiles = 0;
+
+    //tile bag created
+    //UPDATED TO CREATE NEW DISTRIBUTION (1-14)
+    allTiles = genTiles([2, 2, 3, 4, 5, 7, 7, 7, 6, 6, 5, 4, 3, 3]);
+
+    //total number of generated tiles is stored (number)
+    tileNums = allTiles.length;
+
+    //creating the gameboard tile values matrix (default is 7 rows, 6 cols)
+    gameboard = makeMatrix(7, 6);
+
+    //creating the gameboard tile objects matrix (default is 7 rows, 6 cols) 
+    gameTiles = makeObjMatrix(7, 6);
+
+    //clearing the gameboard ui
+    for (let a = 0; a < gameboard.length; a++) {
+
+        clrUserRow(a, 6);
+
+    };
+
+
+    //creating the array that holds the sum of each row's tile values
+    rowSums = rowValues(gameboard);
+
+    //displaying the row sums in the UI
+    showSums(rowSums);
+
+
+    //drawing true so that it can place the random starting tiles
+    drawing = true;
+
+    //places set number of random tiles to start the game
+    for (let i = 0; i < 10; i++) {
+
+        placeRandom()
+        console.log(`placing beginning tile ${i}`);
+
+    };
+
+    //sets drawing back to false once gameboard set
+    drawing = false;
+
+
+    //resetting the score disolay in the ui
+    let viewScore = `<h1>${score}</h1>`;
+    scr.removeChild(scr.children[0]);
+    scr.insertAdjacentHTML("afterbegin", viewScore);
+
+    //holds number of placed tiles (number)
+    placed = 0;
+
+    //holds number of completed rows of 21
+    completedRows = 0;
+
+    //array to hold the status of the available bonuses
+    //defaults to zero for each
+    //changes to value of one if bonus should be active
+    //each time the user gets a completed row, need function that iterates through this array and changes the first occurring zero to a one
+    //need function to check this array and activate bonuses, as needed after each turn
+    bonuses = [0, 0, 0, 0];
+
+    //disabling all bonus buttons again
+    discard.disabled = true;
+    remove.disabled = true;
+    change.disabled = true;
+    wild.disabled = true;
+
+    //bonus tracking reset
+    //tile discarded
+    numDiscard = 0;
+
+    //tile removed
+    numRemoved = 0;
+
+    //tile changed to 1
+    numChanged = 0;
+
+    //wild tile
+    numWild = 0;
+
+
+    //presenting the discarded tile count at zero
+    discarded = tileNums - (allTiles.length + placed);
+
+    //removing the currTile from the current tile display so that the next tile can be shown
+    curr.removeChild(curr.firstChild);
+
+    //random tile index chosen
+    currTileInd = drawIndex(allTiles.length);
+
+    //current tile drawn
+    currTile = allTiles[currTileInd];
+
+    //removing the drawn tile (current tile) from the tile bag
+    allTiles = rmvTile(allTiles, currTileInd);
+
+    //displaying the current tile
+    dispTile();
+
+    //total number of remaining tiles to be drawn is initiated
+    remaining = allTiles.length;
+    console.log(`tiles remaining to be drawn: ${remaining}`);
+
+    //displays modal to start game again
+    endModal.classList.add('hidden')
+    startModal.classList.remove('hidden');
+
+};
+
 
 //callback functions for the bonus buttons!!!
 
@@ -984,46 +1140,55 @@ function placeRandom() {
         //grabs div at the chosen coords
         let tgt = document.getElementById(c);
 
-        //places the chosen tile at the chosen location on the ui
+        //as long as the cell does not already contain a tile, places the chosen tile at the chosen location on the ui
+        if (tgt.hasChildNodes() === false) {
 
-        //placing the currTile on the clicked space on the gameboard
-        let placingRandom = `<img src="images/r${r.value}.png" alt="random tile" draggable="true" ondragstart="dragTile(event)" class="rTile" id="tile${r.id}">`;
-        tgt.insertAdjacentHTML("afterbegin", placingRandom);
+            //placing the currTile on the clicked space on the gameboard
+            let placingRandom = `<img src="images/r${r.value}.png" alt="random tile" draggable="true" ondragstart="dragTile(event)" class="rTile" id="tile${r.id}">`;
+            tgt.insertAdjacentHTML("afterbegin", placingRandom);
 
-        //updates random tile counter
-        randTiles++;
-        console.log(`number of random tiles placed: ${randTiles}`);
+            //updates random tile counter
+            randTiles++;
+            console.log(`number of random tiles placed: ${randTiles}`);
 
-        //updating the gameboard tile values matrix
-        gameboard[c[1]][c[3]] = r.value;
+            //updating the gameboard tile values matrix
+            gameboard[c[1]][c[3]] = r.value;
 
-        //updating the gameboard tile objects matrix
-        gameTiles[c[1]][c[3]] = r;
+            //updating the gameboard tile objects matrix
+            gameTiles[c[1]][c[3]] = r;
 
-        //updating the array that holds the sum of each row's tile values
-        rowSums = rowValues(gameboard);
+            //updating the array that holds the sum of each row's tile values
+            rowSums = rowValues(gameboard);
 
-        //displaying the row sums in the UI
-        showSums(rowSums);
+            //displaying the row sums in the UI
+            showSums(rowSums);
 
-        //updating the user's current score
-        score = score + 10;
-        //<h3 class="score">Current score: </h3>
+            //updating the user's current score
+            score = score + 10;
+            //<h3 class="score">Current score: </h3>
 
-        //updating the score disolay in the ui
-        let viewScore = `<h1>${score}</h1>`;
-        scr.removeChild(scr.children[0]);
-        scr.insertAdjacentHTML("afterbegin", viewScore);
+            //updating the score disolay in the ui
+            let viewScore = `<h1>${score}</h1>`;
+            scr.removeChild(scr.children[0]);
+            scr.insertAdjacentHTML("afterbegin", viewScore);
 
 
-        //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
-        checkSum(rowSums, gameTiles, gameboard, 6);
+            //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+            checkSum(rowSums, gameTiles, gameboard, 6);
 
-        //checking for game end
-        checkEnd(placed, completedRows, numRemoved, 42);
+            //checking for game end
+            checkEnd(placed, randTiles, completedRows, numRemoved, 42);
+
+
+        } else {
+
+            placeRandom();
+        }
 
     } else {
+
         return;
+
     }
 
 };
@@ -1490,12 +1655,10 @@ setInterval(placeRandom, 20000);
 //progress notes as of 12/18/23...
 //need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
 
+//latest update...
 //updated logic to include randomly-placed tiles at set intervals, as well as starting with 10 tiles randomly-placed on the board
-//game rules written. need to make graphic to display rules before game start
-//need to create game-end modal
 
-//write logic in toSelect to check for game end (full board... indicated by gameboard objects matrix being full (no undefined values in it))---done!
-//----need to write code for the game end modal---goes in checkEnd() function
+///later... for now just total score
 //----need to write logic for game-end point summation and summary
 //---game end stats... # completed row, # placed tiles, # discarded tiles, # tiles combined, # tiles moved, total reduction in points by combining tiles, avg drawn tile value vs distribution avg, # of bonuses used, total points!
 
@@ -1541,10 +1704,19 @@ setInterval(placeRandom, 20000);
 
 //need to write logic for placement of random tile in random space (using the currenttile logic previously used, with random placement choice... new function with a new random value generator)---no longer planning this!
 
+///function to reset game
+///---called by reset button in game-end modal---done!!!
+
+///test game end logic and modal appearance---done!!!
 
 
+///---bug... if user places a tile at the same cell that a random tile is being placed, logic allows it and it hold both... add if statement to placeRandom() to prevent this???---fixed!!!
 
+//game rules written. need to make graphic to display rules before game start---done!!!
+//need to create game-end modal---done!!!
 
+//write logic in toSelect to check for game end (full board... indicated by gameboard objects matrix being full (no undefined values in it))---done!
+//----need to write code for the game end modal---goes in checkEnd() function---done!!!
 
 
 
