@@ -6,7 +6,7 @@ This is a logic game written entirely in HTML, CSS and JavaScript (no external l
 I began this project partly because I had an interest in all of the different gameplay elements and their relationship with each other (especially the gameplay number distribution as it relates to the size of the gameboard and the difficulty of the game), so I structured the code base to allow for easy adjustments.
 
 At the moment, the gameboard includes seven rows of six cells per row, and the gameplay number distrubtion is as follows:
-> 1---10, 2---12, 3---10, 4---12, 5---10, 6---12, 7---7, 8---12, 9---9, 10---9, 11---7, 12---12, 13---7, 14---7
+> 1: 10, 2: 12, 3: 10, 4: 12, 5: 10, 6: 12, 7: 7, 8: 12, 9: 9, 10: 9, 11: 7, 12: 12, 13: 7, 14: 7
 
 A random tile is placed on the gameboard every 25 seconds.
 
