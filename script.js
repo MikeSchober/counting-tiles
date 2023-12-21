@@ -871,7 +871,7 @@ function gameReset() {
 
     //tile bag created
     //UPDATED TO CREATE NEW DISTRIBUTION (1-14)
-    allTiles = genTiles([5, 10, 10, 10, 10, 10, 13, 10, 10, 10, 10, 10, 10, 12]);
+    allTiles = genTiles([10, 12, 10, 12, 10, 12, 7, 12, 9, 9, 7, 12, 7, 7]);
 
     //old dist... too hard
     //2, 2, 3, 4, 5, 7, 7, 7, 6, 6, 5, 4, 3, 3
@@ -1594,7 +1594,7 @@ function checkCombine(start, stop, tVals) {
 
 //tile bag created
 //UPDATED TO CREATE NEW DISTRIBUTION (1-14)
-allTiles = genTiles([5, 10, 10, 10, 10, 10, 13, 10, 10, 10, 10, 10, 10, 12]);
+allTiles = genTiles([10, 12, 10, 12, 10, 12, 7, 12, 9, 9, 7, 12, 7, 7]);
 
 //old dist... too hard
 //2, 2, 3, 4, 5, 7, 7, 7, 6, 6, 5, 4, 3, 3
@@ -1651,8 +1651,8 @@ dispTile();
 //total number of remaining tiles to be drawn is initiated
 remaining = allTiles.length;
 
-//logic to place random tiles at set interval... currently 20 seconds
-setInterval(placeRandom, 20000);
+//logic to place random tiles at set interval... currently 25 seconds
+setInterval(placeRandom, 25000);
 
 
 ///////
@@ -1664,6 +1664,14 @@ setInterval(placeRandom, 20000);
 
 //latest update...
 //updated logic to include randomly-placed tiles at set intervals, as well as starting with 10 tiles randomly-placed on the board
+//currently 25 seconds between random tile placements
+
+//bugs 12/21/23...
+//cant remove randomly-placed tile
+//can we chg randomly-placed tile to one???
+
+//checkEnd is too complicated... simpliy it to avoid bugs
+
 
 ///later... for now just total score
 //----need to write logic for game-end point summation and summary
