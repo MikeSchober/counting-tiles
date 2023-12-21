@@ -871,7 +871,10 @@ function gameReset() {
 
     //tile bag created
     //UPDATED TO CREATE NEW DISTRIBUTION (1-14)
-    allTiles = genTiles([2, 2, 3, 4, 5, 7, 7, 7, 6, 6, 5, 4, 3, 3]);
+    allTiles = genTiles([5, 10, 10, 10, 10, 10, 13, 10, 10, 10, 10, 10, 10, 12]);
+
+    //old dist... too hard
+    //2, 2, 3, 4, 5, 7, 7, 7, 6, 6, 5, 4, 3, 3
 
     //total number of generated tiles is stored (number)
     tileNums = allTiles.length;
@@ -1591,7 +1594,11 @@ function checkCombine(start, stop, tVals) {
 
 //tile bag created
 //UPDATED TO CREATE NEW DISTRIBUTION (1-14)
-allTiles = genTiles([2, 2, 3, 4, 5, 7, 7, 7, 6, 6, 5, 4, 3, 3]);
+allTiles = genTiles([5, 10, 10, 10, 10, 10, 13, 10, 10, 10, 10, 10, 10, 12]);
+
+//old dist... too hard
+//2, 2, 3, 4, 5, 7, 7, 7, 6, 6, 5, 4, 3, 3
+
 
 //total number of generated tiles is stored (number)
 tileNums = allTiles.length;
