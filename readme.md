@@ -18,7 +18,7 @@ I love writing JavaScript logic, and this project has been especially enjoyable.
 This is version zero of the game and I am still experimenting with different tile value distributions, but suggestions and improvements are welcome! Fork the repo and open a PR, requesting to pull into `main`!
 
 ## Licensing
-With the exception of the copyright text along with the score and the completed rows numbers, the font used in the gameplay UI is a font called "Acme". Copyright (c) 2011, Juan Pablo del Peral. It is licensed under the SIL Open Font License, which can be found in the accompanying "license.txt" file in this repo. 
+With the exception of the copyright text, along with the score and the completed rows numbers, the font used in the gameplay UI is a font called "Acme". Copyright (c) 2011, Juan Pablo del Peral. It is licensed under the SIL Open Font License, which can be found in the accompanying "license.txt" file in this repo. 
 
 Copyright (c) 2023 Mike Schober
 
