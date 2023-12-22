@@ -268,6 +268,9 @@ function toSelect(event) {
         remaining = allTiles.length;
         console.log(`tiles remaining to be drawn: ${remaining}`);
 
+        //places random tile on board
+        setTimeout(placeRandom, 3000);
+
     } else if (element.tagName === 'IMG' && element.className === 'pTile' && rem === true) {
 
         //functionality for remove clicked tile
@@ -1340,6 +1343,8 @@ function dropTile(e) {
                     discarded = tileNums - (allTiles.length + placed + 1);
                     console.log(`discarded: ${discarded}`);
 
+                    //places random tile on board
+                    // setTimeout(placeRandom, 3000);
 
                 }
 
@@ -1418,6 +1423,9 @@ function dropTile(e) {
                 discarded = tileNums - (allTiles.length + placed + 1);
                 console.log(`discarded: ${discarded}`);
 
+                //disabled for now... too many tiles with this
+                //places random tile on board
+                // setTimeout(placeRandom, 3000);
 
             }
 
@@ -1661,7 +1669,8 @@ dispTile();
 remaining = allTiles.length;
 
 //logic to place random tiles at set interval... currently 25 seconds
-setInterval(placeRandom, 25000);
+//instead of placing random tile at set interval, trying gameplay with random tile being placed every time the user places, moves, or combines a tile or tiles
+// setInterval(placeRandom, 25000);
 
 
 ///////
@@ -1674,8 +1683,8 @@ setInterval(placeRandom, 25000);
 //need to refactor whole code base... start with game initiation. can put much of it into a function which can be called at initial game init and also at game reset
 
 //latest update... 12/21/23
-//updated logic to include randomly-placed tiles at set intervals, as well as starting with 7 tiles randomly-placed on the board
-//currently 25 seconds between random tile placements
+//updated logic to include randomly-placed tiles each time the user manually places a tile. The user can currently move and combine tiles without a random tile being placed.
+//had random tiles being placed every 25 seconds but it was too many tiles, too quickly. if doing random tiles at intervals, need to install button to allow the user to precipitate the placement at lulls in the game. also need to play with board size and number distribution for this to work. work in progress...
 
 
 ///later... for now just total score
