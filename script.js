@@ -247,7 +247,7 @@ function toSelect(event) {
         checkSum(rowSums, gameTiles, gameboard, 6);
 
         //checking for game end
-        checkEnd(placed, randTiles, completedRows, numRemoved, 42);
+        checkEnd();
 
         //removing the currTile from the current tile display so that the next tile can be shown
         curr.removeChild(curr.firstChild);
@@ -805,57 +805,52 @@ function actBonus(b, p) {
 };
 
 //function to check for game end
-//takes placed tiles var and completedRows var as args (numbers), as well as the number of squares on the board (currently 42) (number also) and the number of removed tile bonuses used (number)
-//need to be done after each tile is placed
+//checks for zeroes in the gameboard matrix. if hits a zero, returns from function. otherwise, game over.
+//need to be done after each tile is placed (randomly or manually)
 //displays game end modal when it finds full board
-function checkEnd(p, rand, c, r, sq) {
+function checkEnd() {
 
-    //checking for game end using the args
-    //when the number of tiles on the board is within 6*numWild (to account for extra removed tiles by the bonus), checks for full gamebaord
-    if ((sq - ((p + rand) - ((c * 7) + r))) <= (numWild * 7)) {
+    //checking for game end... checks for full gamebaord
+    for (let x of gameboard) {
 
-        for (let x of gameboard) {
+        for (let y of x) {
 
-            for (let y of x) {
+            if (y === 0) {
 
-                if (y === 0) {
-
-                    console.log(`not complete`);
-                    return;
-
-                }
+                console.log(`not complete`);
+                return;
 
             }
 
         }
 
-        //display game end modal
+    }
 
-        //stops the random placements
-        drawing = false;
+    //executes if there are no zeros in the gameboard matrix... displays game end modal
 
-        //records score as high score if it's higher than current
-        if (score > highScore) {
-            highScore = score;
-        };
+    //stops the random placements
+    drawing = false;
 
-        //updating the modal to show the final score
-        let endScore = `<div><h3>Game over!</h3>
+    //records score as high score if it's higher than current
+    if (score > highScore) {
+        highScore = score;
+    };
+
+    //updating the modal to show the final score
+    let endScore = `<div><h3>Game over!</h3>
         <br>
         <h4>Final score: ${score}</h4>
         <br>
         <h3>Nice job!</h3>
         <br></div>`;
-        endMsg.removeChild(endMsg.children[0]);
-        endMsg.insertAdjacentHTML("afterbegin", endScore);
+    endMsg.removeChild(endMsg.children[0]);
+    endMsg.insertAdjacentHTML("afterbegin", endScore);
 
 
-        //displaying the modal
-        endModal.classList.remove('hidden');
+    //displaying the modal
+    endModal.classList.remove('hidden');
 
-        console.log(`game end!`);
-
-    }
+    console.log(`game end!`);
 
 };
 
@@ -904,7 +899,7 @@ function gameReset() {
     drawing = true;
 
     //places set number of random tiles to start the game
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 7; i++) {
 
         placeRandom()
         console.log(`placing beginning tile ${i}`);
@@ -1014,6 +1009,9 @@ function pOne() {
     //increments the bonus count
     numDiscard++;
 
+    //updates the bonuses array
+    bonuses[0] = 0;
+
     //disables the button
     discard.disabled = true;
 
@@ -1031,6 +1029,9 @@ function pTwo() {
     chg = false;
     wld = false;
 
+    //updates the bonuses array
+    bonuses[1] = 0;
+
     //increments the bonus count
     numRemoved++;
 
@@ -1047,6 +1048,9 @@ function pThree() {
     rem = false;
     wld = false;
 
+    //updates the bonuses array
+    bonuses[2] = 0;
+
     //increments the bonus count
     numChanged++;
 
@@ -1062,6 +1066,9 @@ function pFour() {
     //ensures that the other two special power functionality are disbaled
     rem = false;
     chg = false;
+
+    //updates the bonuses array
+    bonuses[3] = 0;
 
     //increments the bonus count
     numWild++;
@@ -1147,7 +1154,7 @@ function placeRandom() {
         if (tgt.hasChildNodes() === false) {
 
             //placing the currTile on the clicked space on the gameboard
-            let placingRandom = `<img src="images/r${r.value}.png" alt="random tile" draggable="true" ondragstart="dragTile(event)" class="rTile" id="tile${r.id}">`;
+            let placingRandom = `<img src="images/r${r.value}.png" alt="random tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${r.id}">`;
             tgt.insertAdjacentHTML("afterbegin", placingRandom);
 
             //updates random tile counter
@@ -1180,7 +1187,7 @@ function placeRandom() {
             checkSum(rowSums, gameTiles, gameboard, 6);
 
             //checking for game end
-            checkEnd(placed, randTiles, completedRows, numRemoved, 42);
+            checkEnd();
 
 
         } else {
@@ -1617,7 +1624,7 @@ showSums(rowSums);
 
 
 //places set number of random tiles to start the game
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 7; i++) {
 
     placeRandom()
     console.log(`placing beginning tile ${i}`);
@@ -1662,15 +1669,11 @@ setInterval(placeRandom, 25000);
 //progress notes as of 12/18/23...
 //need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
 
-//latest update...
-//updated logic to include randomly-placed tiles at set intervals, as well as starting with 10 tiles randomly-placed on the board
+//need to refactor whole code base... start with game initiation. can put much of it into a function which can be called at initial game init and also at game reset
+
+//latest update... 12/21/23
+//updated logic to include randomly-placed tiles at set intervals, as well as starting with 7 tiles randomly-placed on the board
 //currently 25 seconds between random tile placements
-
-//bugs 12/21/23...
-//cant remove randomly-placed tile
-//can we chg randomly-placed tile to one???
-
-//checkEnd is too complicated... simpliy it to avoid bugs
 
 
 ///later... for now just total score
@@ -1678,7 +1681,7 @@ setInterval(placeRandom, 25000);
 //---game end stats... # completed row, # placed tiles, # discarded tiles, # tiles combined, # tiles moved, total reduction in points by combining tiles, avg drawn tile value vs distribution avg, # of bonuses used, total points!
 
 
-
+//-------------------------------------------------------------
 //finished tasks...
 //tiles created and UI working as designed---done!
 //need to write logic for tile counts in the extra info section---done!!!
@@ -1732,6 +1735,11 @@ setInterval(placeRandom, 25000);
 
 //write logic in toSelect to check for game end (full board... indicated by gameboard objects matrix being full (no undefined values in it))---done!
 //----need to write code for the game end modal---goes in checkEnd() function---done!!!
+
+//checkEnd is too complicated... simpliy it to avoid bugs---done!!!
+
+//bugs 12/21/23...
+//cant remove randomly-placed tile---fixed!!!
 
 
 
