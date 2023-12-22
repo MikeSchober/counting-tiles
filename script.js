@@ -9,7 +9,7 @@
 
 //holds current score (number)
 //starts negative to offset the automatic updating of the random placing function at game initiation
-let score = -100;
+let score = -70;
 
 //holds high score, if user plays several times
 let highScore = 0;
