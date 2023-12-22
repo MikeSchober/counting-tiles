@@ -686,10 +686,12 @@ function clrValRow(tVals, rowInd, colmns) {
 function checkSum(sArr, tObjs, tVals, cols) {
 
     //holds bool to indicate whether or not the row in the tile objs array is full (no undefined)
-    let fullRow = true;
+    let fullRow;
 
     //checking for value of 21 in the sums array
     for (let y = 0; y < sArr.length; y++) {
+
+        fullRow = true;
 
         //if the row sum is 21...
         if (sArr[y] === 21) {
