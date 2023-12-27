@@ -54,6 +54,12 @@ let space;
 //holds number of completed rows of 21
 let completedRows = 0;
 
+//holds current interval for random placing
+let timeframe;
+
+//holds array of row value goals for each row (index in the gomeboard array)
+let goalVals = [];
+
 //array to hold the status of the available bonuses
 //defaults to zero for each
 //changes to value of one if bonus should be active
@@ -243,11 +249,14 @@ function toSelect(event) {
         scr.removeChild(scr.children[0]);
         scr.insertAdjacentHTML("afterbegin", viewScore);
 
-        //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+        //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
         checkSum(rowSums, gameTiles, gameboard, 6);
 
         //checking for game end
         checkEnd();
+
+        //check for random interval adjustment
+        adjRandom();
 
         //removing the currTile from the current tile display so that the next tile can be shown
         curr.removeChild(curr.firstChild);
@@ -269,7 +278,8 @@ function toSelect(event) {
         console.log(`tiles remaining to be drawn: ${remaining}`);
 
         //places random tile on board
-        setTimeout(placeRandom, 3000);
+        //took this out when added random interval adjustment functionality
+        // setTimeout(placeRandom, 3000);
 
     } else if (element.tagName === 'IMG' && element.className === 'pTile' && rem === true) {
 
@@ -334,7 +344,7 @@ function toSelect(event) {
         //displaying the row sums in the UI
         showSums(rowSums);
 
-        //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+        //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
         checkSum(rowSums, gameTiles, gameboard, 6);
 
         //resets the var
@@ -613,6 +623,33 @@ function showSums(theSums) {
 };
 
 
+//displays updated row goals in the UI
+//takes the row sums array as arg (array)
+function showGoals(goalV) {
+
+
+    //iterates through the goal values array and adds the value to the corresponding row goal id in the html doc
+    for (let i = 0; i < goalV.length; i++) {
+
+        let g = document.getElementById(`g${i}`);
+
+        //if the is a firstchild value in s...
+        if (g.firstChild) {
+
+            //removing the value from the div so that the sum can be updated
+            g.removeChild(g.firstChild);
+
+        };
+
+        //inserting the corresponding goal value into g(the row goal cell)
+        let rowG = `<h3>/ ${goalV[i]}</h3>`;
+        g.insertAdjacentHTML("afterbegin", rowG);
+
+    }
+
+};
+
+
 //messed with the clrUserRow() function when added wild tile functionality... if error when clearing user row for actual full row, check here first!!!
 
 //function to clear a completed row in the ui
@@ -691,13 +728,13 @@ function checkSum(sArr, tObjs, tVals, cols) {
     //holds bool to indicate whether or not the row in the tile objs array is full (no undefined)
     let fullRow;
 
-    //checking for value of 21 in the sums array
+    //checking for goal value in the sums array
     for (let y = 0; y < sArr.length; y++) {
 
         fullRow = true;
 
-        //if the row sum is 21...
-        if (sArr[y] === 21) {
+        //if the row sum is the goal value in the goalVals array...
+        if (sArr[y] === goalVals[y]) {
 
             //for loop to check for full row
             for (let x of gameTiles[y]) {
@@ -720,6 +757,16 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 //clears the completed row of the tile objs matrix
                 // gameTiles = clrObjRow(tObjs, y, cols);
                 clrObjRow(tObjs, y, cols);
+
+                //generating new goal value for the row
+                let newG = genGoals();
+                console.log(`new goal: ${newG}`);
+
+                //updating the row goal in the row goals array
+                goalVals[y] = newG;
+
+                //displaying the new row goal
+                showGoals(goalVals);
 
                 //updating the array that holds the sum of each row's tile values
                 rowSums = rowValues(gameboard);
@@ -892,6 +939,17 @@ function gameReset() {
 
     };
 
+    //clearing the goalVals array
+    goalVals = [];
+
+    //creating goal values array
+    for (let i = 0; i < 7; i++) {
+        let g = genGoals();
+        goalVals.push(g);
+    };
+
+    //updating the row goals values in the ui
+    showGoals(goalVals);
 
     //creating the array that holds the sum of each row's tile values
     rowSums = rowValues(gameboard);
@@ -978,6 +1036,18 @@ function gameReset() {
     //displays modal to start game again
     endModal.classList.add('hidden')
     startModal.classList.remove('hidden');
+
+};
+
+
+//generates random row value goal numbers between 21 and 69 (inclusive) and returns that number for use as a specific row value goal
+function genGoals() {
+
+    //generates random number (integer) between 21 and 69 (inclusive)
+    let rand = Math.floor(Math.random() * (70 - 21)) + 21;
+    console.log(`random row value: ${rand}`);
+
+    return rand;
 
 };
 
@@ -1188,11 +1258,14 @@ function placeRandom() {
             scr.insertAdjacentHTML("afterbegin", viewScore);
 
 
-            //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+            //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
             checkSum(rowSums, gameTiles, gameboard, 6);
 
             //checking for game end
             checkEnd();
+
+            //check for random interval adjustment
+            adjRandom();
 
 
         } else {
@@ -1219,6 +1292,32 @@ function startRandom() {
 
 };
 
+
+//function to determine the number of tiles on the board and to adjust the interval at which the random tiles are placed
+function adjRandom() {
+
+    let full = ((placed + randTiles) - (completedRows * 6));
+    console.log(`full: ${full}`);
+
+    if ((timeframe === 25) && (full >= 30)) {
+
+        clearInterval(randInterval);
+        randInterval = setInterval(placeRandom, 40000)
+        timeframe = 40;
+
+        console.log(`placing at 40 seconds now!`);
+
+    } else if ((timeframe === 40) && (full <= 30)) {
+
+        clearInterval(randInterval);
+        randInterval = setInterval(placeRandom, 25000)
+        timeframe = 25;
+
+        console.log(`placing at 25 seconds again!`);
+
+    }
+
+};
 
 
 ///////
@@ -1314,7 +1413,7 @@ function dropTile(e) {
                     //displaying the row sums in the UI
                     showSums(rowSums);
 
-                    //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+                    //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
                     checkSum(rowSums, gameTiles, gameboard, 6);
 
                     //currently, combining tiles allows the discard of the currently-drawn tile... may change this... to change just remove the following code lines to the end of this block...
@@ -1394,7 +1493,7 @@ function dropTile(e) {
                 //displaying the row sums in the UI
                 showSums(rowSums);
 
-                //check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+                //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
                 checkSum(rowSums, gameTiles, gameboard, 6);
 
                 //bc moving or combining a tile results in the currently-drawn tile to be discarded, the currently-drawn tile is removed and the next tile is drawn...
@@ -1468,6 +1567,7 @@ function checkAdjacent(start, stop) {
     console.log(`col: ${stopX}`);
 
     //bc one of the values between the start position and the stop posiiton have to be the same between the two, we look for that first
+    /*
     if (startY === stopY) {
 
         //if that is satisfied with the proposed move, the other value in the new position must be plus or minus one from its original value
@@ -1489,6 +1589,48 @@ function checkAdjacent(start, stop) {
     } else {
 
         adj = false;
+
+    };
+
+        //bc one of the values between the start position and the stop posiiton have to be the same between the two, we look for that first
+    if (startY === stopY) {
+
+        //if that is satisfied with the proposed move, the other value in the new position must be plus or minus one from its original value
+        if (stopX === startX + 1 || stopX === startX - 1) {
+
+            adj = true;
+
+        }
+
+    } else if (startX === stopX) {
+
+        //if that is satisfied with the proposed move, the other value in the new position must be plus or minus one from its original value
+        if (stopY === startY + 1 || stopY === startY - 1) {
+
+            adj = true;
+
+        }
+
+    } else {
+
+        adj = false;
+
+    }
+    */
+
+    //bc one of the values between the start position and the stop posiiton have to be the same between the two, as long as this condition is satisfied the move is allowed
+    if ((startY === stopY) || (startX === stopX)) {
+
+
+        adj = true;
+
+        console.log(`move allowed!`);
+
+    } else {
+
+        adj = false;
+
+        console.log(`move not allowed!`);
 
     }
 
@@ -1626,6 +1768,15 @@ gameboard = makeMatrix(7, 6);
 //creating the gameboard tile objects matrix (default is 7 rows, 6 cols) 
 gameTiles = makeObjMatrix(7, 6);
 
+//creating goal values array
+for (let i = 0; i < 7; i++) {
+    let g = genGoals();
+    goalVals.push(g);
+};
+
+//updating the row goals values in the ui
+showGoals(goalVals);
+
 //creating the array that holds the sum of each row's tile values
 rowSums = rowValues(gameboard);
 
@@ -1670,8 +1821,8 @@ remaining = allTiles.length;
 
 //logic to place random tiles at set interval... currently 25 seconds
 //instead of placing random tile at set interval, trying gameplay with random tile being placed every time the user places, moves, or combines a tile or tiles
-// setInterval(placeRandom, 25000);
-
+let randInterval = setInterval(placeRandom, 25000);
+timeframe = 25;
 
 ///////
 
