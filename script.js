@@ -1040,11 +1040,11 @@ function gameReset() {
 };
 
 
-//generates random row value goal numbers between 21 and 69 (inclusive) and returns that number for use as a specific row value goal
+//generates random row value goal numbers between 21 and 40 (inclusive) and returns that number for use as a specific row value goal
 function genGoals() {
 
-    //generates random number (integer) between 21 and 69 (inclusive)
-    let rand = Math.floor(Math.random() * (70 - 21)) + 21;
+    //generates random number (integer) between 21 and 40 (inclusive)
+    let rand = Math.floor(Math.random() * (41 - 21)) + 21;
     console.log(`random row value: ${rand}`);
 
     return rand;
