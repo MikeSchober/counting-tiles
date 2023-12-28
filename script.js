@@ -230,7 +230,10 @@ function toSelect(event) {
         rowSums = rowValues(gameboard);
 
         //displaying the row sums in the UI
-        showSums(rowSums);
+        // showSums(rowSums);
+
+        //displaying the new row total needed
+        showRemain(rowSums, goalVals);
 
         //updating the placed tile counter
         placed++;
@@ -298,7 +301,10 @@ function toSelect(event) {
         rowSums = rowValues(gameboard);
 
         //displaying the row sums in the UI
-        showSums(rowSums);
+        // showSums(rowSums);
+
+        //displaying the new row total needed
+        showRemain(rowSums, goalVals);
 
         //removes the tile image from the gameboard
         element.remove();
@@ -342,7 +348,10 @@ function toSelect(event) {
         rowSums = rowValues(gameboard);
 
         //displaying the row sums in the UI
-        showSums(rowSums);
+        // showSums(rowSums);
+
+        //displaying the new row total needed
+        showRemain(rowSums, goalVals);
 
         //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
         checkSum(rowSums, gameTiles, gameboard, 6);
@@ -365,12 +374,18 @@ function toSelect(event) {
         element.insertAdjacentHTML("afterbegin", placeWild);
 
         //changes the value of the row in the rowSums matrix to 21
-        rowSums[Number(element.id[1])] = 21;
+        rowSums[Number(element.id[1])] = goalVals[Number(element.id[1])];
 
+        console.log(`row goals: ${goalVals}`);
         console.log(`row sums! : ${rowSums}`);
 
         //displaying the row sums in the UI
-        showSums(rowSums);
+        // showSums(rowSums);
+
+        //displaying the new row total needed
+        //probably dont need this... 
+        //maybe display a W in the remaining column???
+        showRemain(rowSums, goalVals);
 
         //clears the completed row of the tile values matrix
         clrValRow(gameboard, Number(element.id[1]), 6);
@@ -382,7 +397,19 @@ function toSelect(event) {
         rowSums = rowValues(gameboard);
 
         //displaying the row sums in the UI
-        showSums(rowSums);
+        // showSums(rowSums);
+
+        //need to generate a new goal value for the goalVals[element.id[1]] index of the goalVals array... TEST THIS!!!
+
+        //generating new goal value for the row
+        let newG = genGoals();
+        console.log(`new goal: ${newG}`);
+
+        //updating the row goal in the row goals array
+        goalVals[Number(element.id[1])] = newG;
+
+        //displaying the new row total needed
+        // showRemain(rowSums, goalVals);
 
         //updating the user's current score... adds 21 pts!
         score = score + 350;
@@ -624,7 +651,7 @@ function showSums(theSums) {
 
 
 //displays updated row goals in the UI
-//takes the row sums array as arg (array)
+//takes the goal values array as arg (array)
 function showGoals(goalV) {
 
 
@@ -648,6 +675,35 @@ function showGoals(goalV) {
     }
 
 };
+
+
+//displays updated row values needed to meet the row goal
+//takes the rowSums array and the goal values array as args
+function showRemain(theSums, goalV) {
+
+
+    //iterates through the arrays and subtracts the row sum from the goal value to get the remaining tile values needed to reach the row goal
+    //adds the value to the corresponding row goal id in the html doc
+    for (let i = 0; i < goalV.length; i++) {
+
+        let r = document.getElementById(`r${i}`);
+
+        //if the is a firstchild value in s...
+        if (r.firstChild) {
+
+            //removing the value from the div so that the sum can be updated
+            r.removeChild(r.firstChild);
+
+        };
+
+        //inserting the corresponding goal value into g(the row goal cell)
+        let rowToGo = `<h3>${(goalV[i] - theSums[i])}</h3>`;
+        r.insertAdjacentHTML("afterbegin", rowToGo);
+
+    }
+
+};
+
 
 
 //messed with the clrUserRow() function when added wild tile functionality... if error when clearing user row for actual full row, check here first!!!
@@ -675,6 +731,9 @@ function clrUserRow(rowInd, colmns) {
         }
 
     }
+
+    //displaying the new row total needed
+    showRemain(rowSums, goalVals);
 
 };
 
@@ -765,14 +824,18 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 //updating the row goal in the row goals array
                 goalVals[y] = newG;
 
-                //displaying the new row goal
-                showGoals(goalVals);
+                // //displaying the new row goal
+                // showGoals(goalVals);
 
                 //updating the array that holds the sum of each row's tile values
                 rowSums = rowValues(gameboard);
 
-                //displaying the row sums in the UI
-                showSums(rowSums);
+                //test this!!!
+                //displaying the new row total needed
+                // showRemain(rowSums, goalVals);
+
+                // //displaying the row sums in the UI
+                // showSums(rowSums);
 
                 //updating the user's current score... adds 21 pts!
                 score = score + 350;
@@ -948,14 +1011,17 @@ function gameReset() {
         goalVals.push(g);
     };
 
-    //updating the row goals values in the ui
-    showGoals(goalVals);
+    // //updating the row goals values in the ui
+    // showGoals(goalVals);
 
     //creating the array that holds the sum of each row's tile values
     rowSums = rowValues(gameboard);
 
-    //displaying the row sums in the UI
-    showSums(rowSums);
+    //displaying the new row total needed
+    showRemain(rowSums, goalVals);
+
+    // //displaying the row sums in the UI
+    // showSums(rowSums);
 
 
     //drawing true so that it can place the random starting tiles
@@ -1246,7 +1312,10 @@ function placeRandom() {
             rowSums = rowValues(gameboard);
 
             //displaying the row sums in the UI
-            showSums(rowSums);
+            // showSums(rowSums);
+
+            //displaying the new row total needed
+            showRemain(rowSums, goalVals);
 
             //updating the user's current score
             score = score + 10;
@@ -1411,7 +1480,10 @@ function dropTile(e) {
                     rowSums = rowValues(gameboard);
 
                     //displaying the row sums in the UI
-                    showSums(rowSums);
+                    // showSums(rowSums);
+
+                    //displaying the new row total needed
+                    showRemain(rowSums, goalVals);
 
                     //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
                     checkSum(rowSums, gameTiles, gameboard, 6);
@@ -1491,7 +1563,10 @@ function dropTile(e) {
                 rowSums = rowValues(gameboard);
 
                 //displaying the row sums in the UI
-                showSums(rowSums);
+                // showSums(rowSums);
+
+                //displaying the new row total needed
+                showRemain(rowSums, goalVals);
 
                 //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
                 checkSum(rowSums, gameTiles, gameboard, 6);
@@ -1774,14 +1849,17 @@ for (let i = 0; i < 7; i++) {
     goalVals.push(g);
 };
 
-//updating the row goals values in the ui
-showGoals(goalVals);
+// //updating the row goals values in the ui
+// showGoals(goalVals);
 
 //creating the array that holds the sum of each row's tile values
 rowSums = rowValues(gameboard);
 
-//displaying the row sums in the UI
-showSums(rowSums);
+//displaying the new row total needed
+showRemain(rowSums, goalVals);
+
+// //displaying the row sums in the UI
+// showSums(rowSums);
 
 
 //places set number of random tiles to start the game
@@ -1829,6 +1907,13 @@ timeframe = 25;
 
 
 //progress notes as of 12/18/23...
+//cl387... maybe display W in the remaining column when wild is played
+//maybe not... seems to be working ok
+
+//search for "test" in code comments and remove them... think all has been tested
+
+//make the wild bonus only available once per game
+
 //need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
 
 //need to refactor whole code base... start with game initiation. can put much of it into a function which can be called at initial game init and also at game reset

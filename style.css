@@ -201,6 +201,17 @@ header h1 {
 }
 
 
+.rowNeeded {
+    border: 2px solid black;
+    background-color: #dbe0d8;
+    width: 140px;
+    height: 80px;
+    font-size: 35px;
+    text-align: center;
+    padding-top: 2%;
+}
+
+
 /*END GAMEBAORD STYLING*/
 
 
