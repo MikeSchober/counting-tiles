@@ -968,7 +968,7 @@ function checkEnd() {
 function gameReset() {
 
     //score reset
-    score = -100;
+    score = -70;
 
     //holds the number of random tiles placed
     randTiles = 0;
@@ -1767,48 +1767,60 @@ function checkCombine(start, stop, tVals) {
     /* COMMENTED-OUT DUE TO CHANGE IN LOGIC FOR NEW DISTRIBUTION
     //logic to check the values of the tiles being combined. uses the values from passed-in tile values matrix to check for specific values for the tiles that the user is attempting to combine.
     //as of now, only allowing combining of 9/3 and 4/2, resulting in the square root and only works when dragging the larger number into the smaller number, changing the tile value of the larger number
-
+    
     //checking for the 9/3 combo...
     if (tVals[startY][startX] === 9 && tVals[stopY][stopX] === 3) {
-
+    
         cmb = 3;
         console.log(`cmb = 3`);
-
+    
     }
     //checking for the 4/2 combo
     else if (tVals[startY][startX] === 4 && tVals[stopY][stopX] === 2) {
-
+    
         cmb = 2;
         console.log(`cmb = 2`);
-
+    
     }
     //zero if not an authorized combo for combining
     else {
-
+    
         cmb = 0
-
+    
     }
     */
 
 
-    //logic to check the values of the tiles being combined. uses the values from passed-in tile values matrix to check for specific values for the tiles that the user is attempting to combine.
-    //with the new distribution (1-14), allowing the combining of any even tile with any other tile by which it is evenly divisible. combining this way results in the larger tile taking on the value of the quotient
+    //added this if statement to make sure that the combining operaton is only allowed for tiles that are directly adjacent to each other. tiles not right next to each other cannot be combined
+    if ((startY === stopY && (stopX === startX + 1 || stopX === startX - 1)) || (startX === stopX) && (stopY === startY + 1 || stopY === startY - 1)) {
 
-    //checking for a valid combo...
-    //if the modulus between the tile being dragged and the tile with which it is being combined equals zero, the combine operation is allowed, division of the larger tile by the smaller tile is executed, and the larger tile takes on the quotient
-    //does not allow division that results in one!
-    if (((tVals[startY][startX]) % (tVals[stopY][stopX]) === 0) && ((tVals[startY][startX]) / (tVals[stopY][stopX]) != 1)) {
 
-        cmb = (tVals[startY][startX]) / (tVals[stopY][stopX]);
-        console.log(`legal cmb! cmb = ${cmb}`);
+        //logic to check the values of the tiles being combined. uses the values from passed-in tile values matrix to check for specific values for the tiles that the user is attempting to combine.
+        //with the new distribution (1-14), allowing the combining of any even tile with any other tile by which it is evenly divisible. combining this way results in the larger tile taking on the value of the quotient
 
-    }
-    //zero if not an authorized combo for combining
-    else {
+        //checking for a valid combo...
+        //if the modulus between the tile being dragged and the tile with which it is being combined equals zero, the combine operation is allowed, division of the larger tile by the smaller tile is executed, and the larger tile takes on the quotient
+        //does not allow division that results in one!
+        if (((tVals[startY][startX]) % (tVals[stopY][stopX]) === 0) && ((tVals[startY][startX]) / (tVals[stopY][stopX]) != 1)) {
 
-        cmb = 0
+            cmb = (tVals[startY][startX]) / (tVals[stopY][stopX]);
+            console.log(`legal cmb! cmb = ${cmb}`);
 
-    }
+        }
+        //zero if not an authorized combo for combining
+        else {
+
+            cmb = 0
+
+        }
+
+
+
+    } else {
+
+        cmb = 0;
+
+    };
 
     //returns the new value for the tile that was dragged into the divisor tile (zero if combine not authorized)
     return cmb;
