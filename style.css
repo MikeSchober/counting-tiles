@@ -203,7 +203,8 @@ header h1 {
 
 .rowNeeded {
     border: 2px solid black;
-    background-color: #dbe0d8;
+    background-color: rgb(160, 157, 157);
+    color: #dbe0d8;
     width: 140px;
     height: 80px;
     font-size: 35px;

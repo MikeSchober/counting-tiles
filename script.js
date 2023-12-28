@@ -399,8 +399,6 @@ function toSelect(event) {
         //displaying the row sums in the UI
         // showSums(rowSums);
 
-        //need to generate a new goal value for the goalVals[element.id[1]] index of the goalVals array... TEST THIS!!!
-
         //generating new goal value for the row
         let newG = genGoals();
         console.log(`new goal: ${newG}`);
@@ -830,10 +828,6 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 //updating the array that holds the sum of each row's tile values
                 rowSums = rowValues(gameboard);
 
-                //test this!!!
-                //displaying the new row total needed
-                // showRemain(rowSums, goalVals);
-
                 // //displaying the row sums in the UI
                 // showSums(rowSums);
 
@@ -1023,6 +1017,8 @@ function gameReset() {
     // //displaying the row sums in the UI
     // showSums(rowSums);
 
+    //re-initiating the bonuses array to allow the wild bonus again
+    bonuses = [0, 0, 0, 0];
 
     //drawing true so that it can place the random starting tiles
     drawing = true;
@@ -1213,6 +1209,10 @@ function pFour() {
 
     //increments the bonus count
     numWild++;
+
+    //pops the wild bonus from the bonuses array to disable it once it has been used once in the game
+    //will need to reinitiate the bonuses array at game reset
+    bonuses.pop();
 
 };
 
@@ -1907,12 +1907,6 @@ timeframe = 25;
 
 
 //progress notes as of 12/18/23...
-//cl387... maybe display W in the remaining column when wild is played
-//maybe not... seems to be working ok
-
-//search for "test" in code comments and remove them... think all has been tested
-
-//make the wild bonus only available once per game
 
 //need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
 
@@ -1984,6 +1978,8 @@ timeframe = 25;
 //----need to write code for the game end modal---goes in checkEnd() function---done!!!
 
 //checkEnd is too complicated... simpliy it to avoid bugs---done!!!
+
+//make the wild bonus only available once per game---done!!!
 
 //bugs 12/21/23...
 //cant remove randomly-placed tile---fixed!!!
