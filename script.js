@@ -62,6 +62,9 @@ let timeframe;
 //holds array of row value goals for each row (index in the gomeboard array)
 let goalVals = [];
 
+//holds the aggregate value saved by combining tiles (number)
+let ttlSaved = 0;
+
 //array to hold the status of the available bonuses
 //defaults to zero for each
 //changes to value of one if bonus should be active
@@ -191,6 +194,15 @@ class Tile {
         this.newValue = newValue;
         this.image = image;
     }
+
+    //getter to determine how much tile value was saved, if any, by combining this tile with another tile
+    //to make this work, had to define newValue's default value to the original value of the tile when the tile was created
+    get saved() {
+
+        return (this.value - this.newValue)
+
+    }
+
 };
 
 
@@ -472,7 +484,7 @@ function genTiles(dist) {
             console.log(`current id: ${ident}`);
 
             //creating new tile
-            let t = new Tile(ident, val, false, false, 0, 0, `images/${val}.png`);
+            let t = new Tile(ident, val, false, false, 0, val, `images/${val}.png`);
 
             //pushing new tile into the tile bag
             tileBag.push(t);
@@ -590,6 +602,37 @@ function makeObjMatrix(rows, cols) {
     //returns the matrix (defaults to a value of undefined (falsy value) for each cell)
     //[[undefined, undefined, undefined],[undefined, undefined, undefined], etc.]
     return matx;
+};
+
+
+//adds up all the saved values from each tile obj in the gameTile matrix
+//takes the gameTiles matrix as arg (array)
+//returns a number (total tile value saved by combining tiles)
+function savedValues(tObjsMtx) {
+
+    let num = 0;
+
+    //for each row of the gameTiles tile objects matrix...
+    for (let i of tObjsMtx) {
+
+        //for each cell in the row...
+        for (let y of i) {
+
+            //if there is a tile obj in the cell...
+            if (y != undefined) {
+
+                console.log(`num before: ${num}`);
+                num += y.saved;
+                console.log(`num now: ${num}`);
+
+            }
+
+        }
+
+    }
+
+    //returns total tile value saved by combining tiles (number)
+    return num;
 };
 
 
@@ -1434,92 +1477,96 @@ function dropTile(e) {
         if (checkAdjacent(origLoc, e.target.parentElement.id)) {
 
 
-            //if the tile obj in the original loc has not yet been combined (dragging into another tile) or moved...
+            //added infinite combining...
             //on adding the random tile placement functionality, took out the restriction that stopped user from moving and then combining tiles
-            //user can now move and then combine tiles, but cannot combine and then move. once a tile is combined, it cannot be moved or further changed
-            if (gameTiles[origLoc[1]][origLoc[3]].combined === false) {
+            //user can now move and then combine tiles, but cannot combine and then move. once a tile is combined, it cannot be moved but it can be combined again
+            // if (gameTiles[origLoc[1]][origLoc[3]].combined === false) {
 
 
-                //combine tile logic here
-                //function to take the ids from both the starting div and the drop target div and to use those id (location) values to take the tile values from the tile values matrix and determine the combined value (9/3 or 4/2)... this then returns the value for use in calling the new img name for the tile display in the original location
-                //basically... user can combined a 9 into a 3 to change the 9 into a 3, or can combined a 4 into a 2 to change the 4 into a 2... psbly will change this later to allow combining any tile that is divisible by another tile value except for one
+            //combine tile logic here
+            //function to take the ids from both the starting div and the drop target div and to use those id (location) values to take the tile values from the tile values matrix and determine the combined value (9/3 or 4/2)... this then returns the value for use in calling the new img name for the tile display in the original location
+            //basically... user can combined a 9 into a 3 to change the 9 into a 3, or can combined a 4 into a 2 to change the 4 into a 2... psbly will change this later to allow combining any tile that is divisible by another tile value except for one
 
-                //if the checkCombine function results in an allowable result (not zero), then the combine logic excutes here...
+            //if the checkCombine function results in an allowable result (not zero), then the combine logic excutes here...
 
-                //holds the resulting number from the combo (only allowable if the result is not zero... see checkCombine for the specific logic)
-                let cmbValue = checkCombine(origLoc, e.target.parentElement.id, gameboard);
+            //holds the resulting number from the combo (only allowable if the result is not zero... see checkCombine for the specific logic)
+            let cmbValue = checkCombine(origLoc, e.target.parentElement.id, gameboard);
 
-                //if cmbValue is anything but zero, the combine operation is allowed...
-                if (cmbValue != 0) {
+            //if cmbValue is anything but zero, the combine operation is allowed...
+            if (cmbValue != 0) {
 
-                    //logic for combining tiles
+                //logic for combining tiles
 
-                    //delete the img in the origLoc div and replace it with the new/combine value's img
+                //delete the img in the origLoc div and replace it with the new/combine value's img
 
-                    //deletes the orig img
-                    document.getElementById(origLoc).removeChild(document.getElementById(origLoc).firstChild);
+                //deletes the orig img
+                document.getElementById(origLoc).removeChild(document.getElementById(origLoc).firstChild);
 
-                    //adds the new img
-                    let cmbTile = `<img src="images/${cmbValue}cmb.png" alt="combined tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[origLoc[1]][origLoc[3]].id}">`;
+                //adds the new img
+                let cmbTile = `<img src="images/${cmbValue}cmb.png" alt="combined tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[origLoc[1]][origLoc[3]].id}">`;
 
-                    //inserts the new tile img into the dragged tile's orig position on the gamebaord
-                    document.getElementById(origLoc).insertAdjacentHTML("afterbegin", cmbTile);
-
-
-                    //in the tile objs matrix, for the obj at the origLoc, set the combined property = true and the newValue = new combined value
-                    //also changes the moved property to true to prevent subsequent moving (may change this later)
-                    //also changes the img path to the correct img
-                    gameTiles[origLoc[1]][origLoc[3]].combined = true;
-                    gameTiles[origLoc[1]][origLoc[3]].moved = true;
-                    gameTiles[origLoc[1]][origLoc[3]].newValue = cmbValue;
-                    gameTiles[origLoc[1]][origLoc[3]].image = `images/${gameTiles[origLoc[1]][origLoc[3]].newValue}cmb.png`;
+                //inserts the new tile img into the dragged tile's orig position on the gamebaord
+                document.getElementById(origLoc).insertAdjacentHTML("afterbegin", cmbTile);
 
 
-                    //in the tile values matrix, for the obj at origLoc, set the value to the new combined value
-                    gameboard[origLoc[1]][origLoc[3]] = cmbValue;
+                //in the tile objs matrix, for the obj at the origLoc, set the combined property = true and the newValue = new combined value
+                //also changes the moved property to true to prevent subsequent moving (may change this later)
+                //also changes the img path to the correct img
+                gameTiles[origLoc[1]][origLoc[3]].combined = true;
+                gameTiles[origLoc[1]][origLoc[3]].moved = true;
+                gameTiles[origLoc[1]][origLoc[3]].newValue = cmbValue;
+                gameTiles[origLoc[1]][origLoc[3]].image = `images/${gameTiles[origLoc[1]][origLoc[3]].newValue}cmb.png`;
 
-                    //updating the array that holds the sum of each row's tile values
-                    rowSums = rowValues(gameboard);
 
-                    //displaying the row sums in the UI
-                    // showSums(rowSums);
+                //in the tile values matrix, for the obj at origLoc, set the value to the new combined value
+                gameboard[origLoc[1]][origLoc[3]] = cmbValue;
 
-                    //displaying the new row total needed
-                    showRemain(rowSums, goalVals);
+                //updating the array that holds the sum of each row's tile values
+                rowSums = rowValues(gameboard);
 
-                    //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
-                    checkSum(rowSums, gameTiles, gameboard, 6);
+                //displaying the row sums in the UI
+                // showSums(rowSums);
 
-                    //currently, combining tiles allows the discard of the currently-drawn tile... may change this... to change just remove the following code lines to the end of this block...
+                //displaying the new row total needed
+                showRemain(rowSums, goalVals);
 
-                    //removing the currTile from the current tile display so that the next tile can be shown
-                    curr.removeChild(curr.firstChild);
+                //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+                checkSum(rowSums, gameTiles, gameboard, 6);
 
-                    //next random tile index chosen
-                    currTileInd = drawIndex(allTiles.length);
+                //update the total value saved by combining tiles
+                ttlSaved = savedValues(gameTiles);
+                console.log(`total saved: ${ttlSaved}`);
 
-                    //next tile drawn
-                    currTile = allTiles[currTileInd];
+                //currently, combining tiles allows the discard of the currently-drawn tile... may change this... to change just remove the following code lines to the end of this block...
 
-                    //removing the drawn tile from the tile bag
-                    allTiles = rmvTile(allTiles, currTileInd);
+                //removing the currTile from the current tile display so that the next tile can be shown
+                curr.removeChild(curr.firstChild);
 
-                    //displaying the next tile
-                    dispTile();
+                //next random tile index chosen
+                currTileInd = drawIndex(allTiles.length);
 
-                    //total number of remaining tiles to be drawn is updated
-                    remaining = allTiles.length;
-                    console.log(`tiles remaining to be drawn: ${remaining}`);
+                //next tile drawn
+                currTile = allTiles[currTileInd];
 
-                    //updating the discarded tile count
-                    //plus one here bc the currently-drawn tile is not included in the allTiles bag or the number of placed tiles
-                    discarded = tileNums - (allTiles.length + placed + 1);
-                    console.log(`discarded: ${discarded}`);
+                //removing the drawn tile from the tile bag
+                allTiles = rmvTile(allTiles, currTileInd);
 
-                    //places random tile on board
-                    // setTimeout(placeRandom, 3000);
+                //displaying the next tile
+                dispTile();
 
-                }
+                //total number of remaining tiles to be drawn is updated
+                remaining = allTiles.length;
+                console.log(`tiles remaining to be drawn: ${remaining}`);
+
+                //updating the discarded tile count
+                //plus one here bc the currently-drawn tile is not included in the allTiles bag or the number of placed tiles
+                discarded = tileNums - (allTiles.length + placed + 1);
+                console.log(`discarded: ${discarded}`);
+
+                //places random tile on board
+                // setTimeout(placeRandom, 3000);
+
+                // }
 
 
             }
