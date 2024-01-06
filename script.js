@@ -1,6 +1,7 @@
 'use strict';
 
 //version 0.3.0
+//includes total saved count as getter within the tile objs and allows infinite combining
 
 ///////
 //GLOBAL VARS//
