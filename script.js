@@ -1,6 +1,6 @@
 'use strict';
 
-//version 0.3.0
+//version 0.4.0
 //includes total saved count as getter within the tile objs and allows infinite combining
 
 ///////
@@ -12,7 +12,7 @@
 
 //holds current score (number)
 //starts negative to offset the automatic updating of the random placing function at game initiation
-let score = -70;
+let score = 0;
 
 //holds high score, if user plays several times
 let highScore = 0;
@@ -258,14 +258,15 @@ function toSelect(event) {
         discarded = tileNums - (allTiles.length + placed);
         console.log(`discarded: ${discarded}`);
 
+        //chgd scoring logic to ttl value saved...
         //updating the user's current score
-        score = score + 10;
+        // score = score + 10;
         //<h3 class="score">Current score: </h3>
 
         //updating the score disolay in the ui
-        let viewScore = `<h1>${score}</h1>`;
-        scr.removeChild(scr.children[0]);
-        scr.insertAdjacentHTML("afterbegin", viewScore);
+        // let viewScore = `<h1>${score}</h1>`;
+        // scr.removeChild(scr.children[0]);
+        // scr.insertAdjacentHTML("afterbegin", viewScore);
 
         //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
         checkSum(rowSums, gameTiles, gameboard, 6);
@@ -424,8 +425,9 @@ function toSelect(event) {
         //displaying the new row total needed
         // showRemain(rowSums, goalVals);
 
-        //updating the user's current score... adds 21 pts!
-        score = score + 350;
+        //chgd scoring to ttlsaved + 350 per completed row
+        //updating the user's current score... adds 350 pts!
+        // score = score + 350;
 
         //updating the number of completed rows in the var
         completedRows++;
@@ -435,11 +437,16 @@ function toSelect(event) {
         rs.removeChild(rs.children[0]);
         rs.insertAdjacentHTML("afterbegin", viewRows);
 
+        //recalculating and updating the score
+        //recalc...
+        score = (ttlSaved + (completedRows * 350));
+        console.log(`SCORE UPDATE: ${score}`);
 
         //updating the score disolay in the ui
         let viewScore = `<h1>${score}</h1>`;
         scr.removeChild(scr.children[0]);
         scr.insertAdjacentHTML("afterbegin", viewScore);
+
 
         ///setTimeout function calls function to clear the row in the ui after 3 seconds...
         setTimeout(clrUserRow, 3000, Number(element.id[1]), 6);
@@ -877,8 +884,9 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 // //displaying the row sums in the UI
                 // showSums(rowSums);
 
+                //chgd socring to ttlsaved + 350 per completed row
                 //updating the user's current score... adds 21 pts!
-                score = score + 350;
+                // score = score + 350;
 
                 //updating the number of completed rows in the var
                 completedRows++;
@@ -888,10 +896,16 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 rs.removeChild(rs.children[0]);
                 rs.insertAdjacentHTML("afterbegin", viewRows);
 
+                //recalculating and updating the score
+                //recalc...
+                score = (ttlSaved + (completedRows * 350));
+                console.log(`SCORE UPDATE: ${score}`);
+
                 //updating the score disolay in the ui
                 let viewScore = `<h1>${score}</h1>`;
                 scr.removeChild(scr.children[0]);
                 scr.insertAdjacentHTML("afterbegin", viewScore);
+
 
                 //updates the bonuses array
                 updateBonus(bonuses);
@@ -1014,7 +1028,7 @@ function checkEnd() {
 function gameReset() {
 
     //score reset
-    score = -70;
+    score = 0;
 
     //holds the number of random tiles placed
     randTiles = 0;
@@ -1363,14 +1377,15 @@ function placeRandom() {
             //displaying the new row total needed
             showRemain(rowSums, goalVals);
 
+            //chgd scoring logic to ttl value saved...
             //updating the user's current score
-            score = score + 10;
+            // score = score + 10;
             //<h3 class="score">Current score: </h3>
 
             //updating the score disolay in the ui
-            let viewScore = `<h1>${score}</h1>`;
-            scr.removeChild(scr.children[0]);
-            scr.insertAdjacentHTML("afterbegin", viewScore);
+            // let viewScore = `<h1>${score}</h1>`;
+            // scr.removeChild(scr.children[0]);
+            // scr.insertAdjacentHTML("afterbegin", viewScore);
 
 
             //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
@@ -1537,6 +1552,17 @@ function dropTile(e) {
                 //update the total value saved by combining tiles
                 ttlSaved = savedValues(gameTiles);
                 console.log(`total saved: ${ttlSaved}`);
+
+                //recalculating and updating the score
+                //recalc...
+                score = (ttlSaved + (completedRows * 350));
+                console.log(`SCORE UPDATE: ${score}`);
+
+                //updating the score disolay in the ui
+                let viewScore = `<h1>${score}</h1>`;
+                scr.removeChild(scr.children[0]);
+                scr.insertAdjacentHTML("afterbegin", viewScore);
+
 
                 //currently, combining tiles allows the discard of the currently-drawn tile... may change this... to change just remove the following code lines to the end of this block...
 
