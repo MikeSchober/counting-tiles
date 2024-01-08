@@ -17,6 +17,11 @@ let score = 0;
 //holds high score, if user plays several times
 let highScore = 0;
 
+//counter that holds latest tile id (starts at zero)
+//moved from within the genTiles function to the global scope so that we can access this from the addLarger function when adding the larger tiles to the dist after each row completed
+let ident = 0;
+
+
 //holds gameboard tile value matrix (array and arrays)
 let gameboard;
 
@@ -255,7 +260,7 @@ function toSelect(event) {
         console.log(`number of placed tiles: ${placed}`);
 
         //updating the discarded tile count
-        discarded = tileNums - (allTiles.length + placed);
+        discarded = (tileNums - placed - randTiles - 1) - remaining;
         console.log(`discarded: ${discarded}`);
 
         //chgd scoring logic to ttl value saved...
@@ -274,8 +279,9 @@ function toSelect(event) {
         //checking for game end
         checkEnd();
 
+        //adjRandom slowed-down the placement of random tiles as the board filled up. removed this for now
         //check for random interval adjustment
-        adjRandom();
+        // adjRandom();
 
         //removing the currTile from the current tile display so that the next tile can be shown
         curr.removeChild(curr.firstChild);
@@ -447,6 +453,20 @@ function toSelect(event) {
         scr.removeChild(scr.children[0]);
         scr.insertAdjacentHTML("afterbegin", viewScore);
 
+        //adding difficulty... decreasing time int between randomTile placement and increasing tile values in the dist
+        //tile values go up to a value of 40 and the interval between tile placements goes down to 8 seconds (might need to put fasterRandom() in its own if statement... if needed to go even faster than 8 seconds)
+        if (completedRows < 18) {
+
+            //increasing the speed at which random tiles are placed based on the ttl number of completed rows
+            fasterRandom();
+
+            //add next larger tile value to the distribution
+            //completedRows -1 is second arg bc it has already been incremented here and we need to start at index zero
+            addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], (completedRows - 1), 10);
+
+
+        };
+
 
         ///setTimeout function calls function to clear the row in the ui after 3 seconds...
         setTimeout(clrUserRow, 3000, Number(element.id[1]), 6);
@@ -466,9 +486,6 @@ function toSelect(event) {
 //function to generate all tiles and return them in an array
 //take as arg... distribution, in order, by number (dist is array containing the number of tiles desired, in order, one-the last tile number desired (currently 14). so currently index zero through index 13 in the passed-in array)
 function genTiles(dist) {
-
-    //counter that holds latest tile id (starts at zero)
-    let ident = 0;
 
     //holds current value being assigned
     let val = 0;
@@ -914,6 +931,21 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 actBonus(bonuses, powers);
 
 
+                //adding difficulty... decreasing time int between randomTile placement and increasing tile values in the dist
+                //tile values go up to a value of 40 and the interval between tile placements goes down to 8 seconds (might need to put fasterRandom() in its own if statement... if needed to go even faster than 8 seconds)
+                if (completedRows < 18) {
+
+                    //increasing the speed at which random tiles are placed based on the ttl number of completed rows
+                    fasterRandom();
+
+                    //add next larger tile value to the distribution
+                    //completedRows -1 is second arg bc it has already been incremented here and we need to start at index zero
+                    addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], (completedRows - 1), 10);
+
+
+                };
+
+
                 //style it with special style for 3 seconds...
                 //come back to this...
                 //add background color to the total column of the completed row
@@ -1132,9 +1164,13 @@ function gameReset() {
     //wild tile
     numWild = 0;
 
+    //resetting the tile placement interval
+    clearInterval(randInterval);
+    randInterval = setInterval(placeRandom, 25000);
+
 
     //presenting the discarded tile count at zero
-    discarded = tileNums - (allTiles.length + placed);
+    discarded = (tileNums - placed - randTiles) - remaining;
 
     //removing the currTile from the current tile display so that the next tile can be shown
     curr.removeChild(curr.firstChild);
@@ -1200,7 +1236,7 @@ function pOne() {
     console.log(`tiles remaining to be drawn: ${remaining}`);
 
     //updating the discarded tile count (plus one bc the current tile is not included in the allTiles array)
-    discarded = tileNums - (allTiles.length + placed + 1);
+    discarded = (tileNums - placed - randTiles - 1) - remaining;
     console.log(`discarded: ${discarded}`);
 
     //increments the bonus count
@@ -1394,8 +1430,9 @@ function placeRandom() {
             //checking for game end
             checkEnd();
 
+            //adjRandom slowed-down the placement of random tiles as the board filled up. removed this for now
             //check for random interval adjustment
-            adjRandom();
+            // adjRandom();
 
 
         } else {
@@ -1423,6 +1460,19 @@ function startRandom() {
 };
 
 
+//as user completes rows, the interval at which tiles are randomly placed decreases
+//function to decrease the interval at which tiles are placed
+function fasterRandom() {
+
+    let t = 25000 - (completedRows * 1000);
+    console.log(`new t will be: ${t}`);
+
+    clearInterval(randInterval);
+    randInterval = setInterval(placeRandom, t);
+
+};
+
+
 //function to determine the number of tiles on the board and to adjust the interval at which the random tiles are placed
 function adjRandom() {
 
@@ -1446,6 +1496,39 @@ function adjRandom() {
         console.log(`placing at 25 seconds again!`);
 
     }
+
+};
+
+
+//function for adding larger-value tiles to the distribution
+//only adds one larger tile value at a time
+//takes as arg array of tile values that we want to add and the index of the array that we are currently adding
+//also takes as arg the number of tiles that we want to create at the larger value
+function addLarger(newVals, ind, numLarge) {
+
+    //tile value that we are currently assigning
+    let val = newVals[ind];
+    console.log(`CURRENT LARGER TILE VALUE BEING ASSIGNED: ${val}`);
+
+    //for each number, creates the specified number of tile objects and adds them to the tileValues array
+    for (let i = 0; i < numLarge; i++) {
+
+        //increments counter
+        ident++;
+        console.log(`current id: ${ident}`);
+
+        //creating new tile
+        let t = new Tile(ident, val, false, false, 0, val, `images/${val}.png`);
+
+        //pushing new tile into the tile bag
+        allTiles.push(t);
+
+    }
+
+    //updating the counter for the number of tiles generated
+    console.log(`old tileNums: ${tileNums}`);
+    tileNums = tileNums + numLarge;
+    console.log(`new tileNums: ${tileNums}`);
 
 };
 
@@ -1587,7 +1670,7 @@ function dropTile(e) {
 
                 //updating the discarded tile count
                 //plus one here bc the currently-drawn tile is not included in the allTiles bag or the number of placed tiles
-                discarded = tileNums - (allTiles.length + placed + 1);
+                discarded = (tileNums - placed - randTiles - 1) - remaining;
                 console.log(`discarded: ${discarded}`);
 
                 //places random tile on board
@@ -1670,7 +1753,7 @@ function dropTile(e) {
 
                 //updating the discarded tile count
                 //plus one here bc the currently-drawn tile is not included in the allTiles bag or the number of placed tiles
-                discarded = tileNums - (allTiles.length + placed + 1);
+                discarded = (tileNums - placed - randTiles - 1) - remaining;
                 console.log(`discarded: ${discarded}`);
 
                 //disabled for now... too many tiles with this
@@ -1968,7 +2051,7 @@ drawing = false;
 //GAMEPLAY
 
 //presenting the discarded tile count at zero
-discarded = tileNums - (allTiles.length + placed);
+discarded = (tileNums - placed - randTiles) - remaining;
 
 //random tile index chosen
 currTileInd = drawIndex(allTiles.length);
