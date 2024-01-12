@@ -2,6 +2,7 @@
 
 //version 0.4.0
 //includes total saved count as getter within the tile objs and allows infinite combining
+//also adds decreasing time interval between random placements, increasing tile value distribution (both happen as rows are completed), and challenge mode logic (still need user selection for it)
 
 ///////
 //GLOBAL VARS//
@@ -21,6 +22,10 @@ let highScore = 0;
 //moved from within the genTiles function to the global scope so that we can access this from the addLarger function when adding the larger tiles to the dist after each row completed
 let ident = 0;
 
+//holds boolean for whether or not user chose to play challenge mode
+//when challenge mode selected and this is true, the time intervals between random tile placements decrease incrementally
+//need to create the selection for this in the game start modal
+let challenge = true;
 
 //holds gameboard tile value matrix (array and arrays)
 let gameboard;
@@ -454,15 +459,22 @@ function toSelect(event) {
         scr.insertAdjacentHTML("afterbegin", viewScore);
 
         //adding difficulty... decreasing time int between randomTile placement and increasing tile values in the dist
-        //tile values go up to a value of 40 and the interval between tile placements goes down to 8 seconds (might need to put fasterRandom() in its own if statement... if needed to go even faster than 8 seconds)
-        if (completedRows < 18) {
+        //currently results in interval from 25 sec to 7 sec after 34 rows
+        if ((completedRows % 2 === 0) && (completedRows < 35) && (challenge)) {
 
             //increasing the speed at which random tiles are placed based on the ttl number of completed rows
             fasterRandom();
+            console.log(`faster!`);
+
+        };
+
+
+        //tile values go up to a value of 40
+        if (completedRows < 18) {
 
             //add next larger tile value to the distribution
             //completedRows -1 is second arg bc it has already been incremented here and we need to start at index zero
-            addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], (completedRows - 1), 10);
+            addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], (completedRows - 1), 5);
 
 
         };
@@ -932,15 +944,21 @@ function checkSum(sArr, tObjs, tVals, cols) {
 
 
                 //adding difficulty... decreasing time int between randomTile placement and increasing tile values in the dist
-                //tile values go up to a value of 40 and the interval between tile placements goes down to 8 seconds (might need to put fasterRandom() in its own if statement... if needed to go even faster than 8 seconds)
-                if (completedRows < 18) {
+                //currently results in interval from 25 sec to 7 sec after 34 rows
+                if ((completedRows % 2 === 0) && (completedRows < 35) && (challenge)) {
 
                     //increasing the speed at which random tiles are placed based on the ttl number of completed rows
                     fasterRandom();
+                    console.log(`faster!`);
+
+                };
+
+                //tile values go up to a value of 40
+                if (completedRows < 18) {
 
                     //add next larger tile value to the distribution
                     //completedRows -1 is second arg bc it has already been incremented here and we need to start at index zero
-                    addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], (completedRows - 1), 10);
+                    addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], (completedRows - 1), 5);
 
 
                 };
@@ -1464,7 +1482,7 @@ function startRandom() {
 //function to decrease the interval at which tiles are placed
 function fasterRandom() {
 
-    let t = 25000 - (completedRows * 1000);
+    let t = 25000 - ((completedRows / 2) * 1000);
     console.log(`new t will be: ${t}`);
 
     clearInterval(randInterval);
@@ -2078,6 +2096,12 @@ timeframe = 25;
 
 
 //progress notes as of 12/18/23...
+
+//need to create the selection for challenge mode or casual mode in the game start modal
+
+//created all tiles with no transparent background. need to decide on styling to moved and combined tiles
+
+//need to update rules and the readme
 
 //need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
 
