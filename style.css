@@ -231,15 +231,16 @@ header h1 {
 
 
 .currTile {
-    /* border: 2px solid black; */
-    height: 300px;
-    width: 300px;
-    margin-bottom: 10px;
+    border: 4px solid black;
+    background-color: #efe4b0;
+    height: 250px;
+    width: 250px;
+    margin-bottom: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
-    /* background-color: #F2F1E8; */
+
 
 }
 
@@ -250,10 +251,10 @@ header h1 {
 
 }
 
-.cTile {
+/* .cTile {
     border: 4px solid black;
 
-}
+} */
 
 .psblActions {
     padding: 2px 3px;
@@ -354,6 +355,63 @@ button:disabled {
 
 }
 
+.std {
+    background-color: #efe4b0;
+
+}
+
+.rdm {
+
+    background-color: #F58B6B;
+
+}
+
+.mvd {
+
+    background-color: #99D9EA;
+}
+
+.one {
+
+    background-color: #00A2E8;
+
+}
+
+
+.two {
+
+    background-color: #0195d4;
+
+}
+
+
+.three {
+
+    background-color: #0184bd;
+
+}
+
+
+.four {
+
+    background-color: #0171a1;
+
+}
+
+
+.five {
+
+    background-color: #015b81;
+
+}
+
+.cplt {
+
+    z-index: 1;
+    border: 2px solid yellow;
+    background-color: rgba(95, 93, 93, 0.7);
+
+}
 
 /*for responsive design... less than width of 1190 needs to be adjusted to column display*/
 

@@ -245,6 +245,9 @@ function toSelect(event) {
         let placeTile = `<img src="${currTile.image}" alt="CURRENT TILE" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${currTile.id}">`;
         element.insertAdjacentHTML("afterbegin", placeTile);
 
+        //changing the cell background color to style the placed tile
+        element.classList.add("std");
+
         //updating the gameboard tile values matrix
         gameboard[space[1]][space[3]] = currTile.value;
 
@@ -333,6 +336,9 @@ function toSelect(event) {
         //displaying the new row total needed
         showRemain(rowSums, goalVals);
 
+        //changing the cell background color to the default color
+        element.parentElement.classList = "cell";
+
         //removes the tile image from the gameboard
         element.remove();
 
@@ -362,10 +368,13 @@ function toSelect(event) {
 
 
         //adds the new img
-        let one = `<img src="images/1.png" alt="special tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[Number(element.parentElement.id[1])][Number(element.parentElement.id[3])].id}">`;
+        let one = `<img src="images/1n.png" alt="special tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[Number(element.parentElement.id[1])][Number(element.parentElement.id[3])].id}">`;
 
         //inserts the new tile img into the dragged tile's orig position on the gamebaord
         element.parentElement.insertAdjacentHTML("afterbegin", one);
+
+        //changing the cell background color to style the placed tile
+        element.parentElement.classList.add("std");
 
         //removes the tile image from the gameboard
         element.remove();
@@ -479,6 +488,12 @@ function toSelect(event) {
 
         };
 
+        //style it with special style for 3 seconds...
+        //come back to this...
+        //add background color to the total column of the completed row
+        //in the setTimeout function, add functionality for the total column in the row to reset to its default background color
+        document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5"][Number(element.id[1])]).classList.add("cplt");
+
 
         ///setTimeout function calls function to clear the row in the ui after 3 seconds...
         setTimeout(clrUserRow, 3000, Number(element.id[1]), 6);
@@ -521,7 +536,7 @@ function genTiles(dist) {
             console.log(`current id: ${ident}`);
 
             //creating new tile
-            let t = new Tile(ident, val, false, false, 0, val, `images/${val}.png`);
+            let t = new Tile(ident, val, false, false, 0, val, `images/${val}n.png`);
 
             //pushing new tile into the tile bag
             tileBag.push(t);
@@ -808,7 +823,13 @@ function clrUserRow(rowInd, colmns) {
             //removes the img from the cell
             currC.removeChild(currC.firstChild);
 
+            //changing the cell background color back to default by removing any added styling classes
+            currC.classList = "cell";
+
         }
+
+        //removes special styling for completed row
+        document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5"][rowInd]).classList.remove("cplt");
 
     }
 
@@ -968,6 +989,7 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 //come back to this...
                 //add background color to the total column of the completed row
                 //in the setTimeout function, add functionality for the total column in the row to reset to its default background color
+                document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5"][y]).classList.add("cplt");
 
                 ///setTimeout function calls function to clear the row in the ui after 3 seconds...
                 setTimeout(clrUserRow, 3000, y, cols);
@@ -1409,8 +1431,12 @@ function placeRandom() {
         if (tgt.hasChildNodes() === false) {
 
             //placing the currTile on the clicked space on the gameboard
-            let placingRandom = `<img src="images/r${r.value}.png" alt="random tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${r.id}">`;
+            //need to chg img path here for css background color styling
+            let placingRandom = `<img src="images/${r.value}n.png" alt="random tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${r.id}">`;
             tgt.insertAdjacentHTML("afterbegin", placingRandom);
+
+            //adds class for random tile background styling
+            tgt.classList.add("rdm");
 
             //updates random tile counter
             randTiles++;
@@ -1536,7 +1562,7 @@ function addLarger(newVals, ind, numLarge) {
         console.log(`current id: ${ident}`);
 
         //creating new tile
-        let t = new Tile(ident, val, false, false, 0, val, `images/${val}.png`);
+        let t = new Tile(ident, val, false, false, 0, val, `images/${val}n.png`);
 
         //pushing new tile into the tile bag
         allTiles.push(t);
@@ -1617,13 +1643,21 @@ function dropTile(e) {
                 //delete the img in the origLoc div and replace it with the new/combine value's img
 
                 //deletes the orig img
+                document.getElementById(origLoc).classList = "cell";
                 document.getElementById(origLoc).removeChild(document.getElementById(origLoc).firstChild);
 
+                //need to change picture name back to "valueCMB.png" once we have the styling for the cmb tile... background transparent, but box around it or something???
+
                 //adds the new img
-                let cmbTile = `<img src="images/${cmbValue}cmb.png" alt="combined tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[origLoc[1]][origLoc[3]].id}">`;
+                let cmbTile = `<img src="images/${cmbValue}n.png" alt="combined tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[origLoc[1]][origLoc[3]].id}">`;
 
                 //inserts the new tile img into the dragged tile's orig position on the gamebaord
                 document.getElementById(origLoc).insertAdjacentHTML("afterbegin", cmbTile);
+
+                //logic for combined tile styling... progressivelt gets darker as user combines several times
+                //uses the combo property of the tile object to determine the class that is assigned to the div at document.getElementBtId(origLoc)...
+                //styling for combining up to five times
+                document.getElementById(origLoc).classList = "cell " + ["one", "two", "three", "four", "five"][gameTiles[origLoc[1]][origLoc[3]].combo];
 
 
                 //in the tile objs matrix, for the obj at the origLoc, set the combined property = true and the newValue = new combined value
@@ -1632,6 +1666,7 @@ function dropTile(e) {
                 gameTiles[origLoc[1]][origLoc[3]].combined = true;
                 gameTiles[origLoc[1]][origLoc[3]].moved = true;
                 gameTiles[origLoc[1]][origLoc[3]].newValue = cmbValue;
+                gameTiles[origLoc[1]][origLoc[3]].combo++;
                 gameTiles[origLoc[1]][origLoc[3]].image = `images/${gameTiles[origLoc[1]][origLoc[3]].newValue}cmb.png`;
 
 
@@ -1719,8 +1754,14 @@ function dropTile(e) {
                 let d = e.dataTransfer.getData("text");
                 e.target.appendChild(document.getElementById(d));
 
+                //need to change picture name back to "valueMVD.png" once we have the styling for the mvd tile... background transparent, but box around it or something???
+
                 //logic to update the picture styling
-                e.target.firstChild.src = `images/${gameTiles[origLoc[1]][origLoc[3]].value}mvd.png`;
+                e.target.firstChild.src = `images/${gameTiles[origLoc[1]][origLoc[3]].value}n.png`;
+                e.target.classList.add("mvd");
+
+                //removing the background styling from the original space that the file occupied
+                document.getElementById(origLoc).classList = "cell";
 
                 //logic to update the matrices
 
@@ -2096,6 +2137,8 @@ timeframe = 25;
 
 
 //progress notes as of 12/18/23...
+
+//CL 1760 and 1652... need to change back to the mvd and cmb image names once we have the styling nailed down for them... currently all using the valueN.png images
 
 //need to create the selection for challenge mode or casual mode in the game start modal
 
