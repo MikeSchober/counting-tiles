@@ -144,6 +144,7 @@ header h1 {
 .row {
     display: flex;
     flex-direction: row;
+    position: relative;
 }
 
 /*TABLE CELL STYLING*/
@@ -407,11 +408,26 @@ button:disabled {
 
 .cplt {
 
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
     z-index: 1;
-    border: 2px solid yellow;
+    background-color: black;
     background-color: rgba(95, 93, 93, 0.7);
 
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: #efe4b0;
+    font-size: 35px;
+
+
 }
+
+
 
 /*for responsive design... less than width of 1190 needs to be adjusted to column display*/
 

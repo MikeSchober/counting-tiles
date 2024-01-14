@@ -492,7 +492,10 @@ function toSelect(event) {
         //come back to this...
         //add background color to the total column of the completed row
         //in the setTimeout function, add functionality for the total column in the row to reset to its default background color
-        document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5"][Number(element.id[1])]).classList.add("cplt");
+        let cpltIns = `<div id="cplt" class="cplt">
+            <h3>Bam! Row complete!</h3></div>`;
+
+        document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5"][Number(element.id[1])]).insertAdjacentHTML("afterbegin", cpltIns);
 
 
         ///setTimeout function calls function to clear the row in the ui after 3 seconds...
@@ -828,10 +831,10 @@ function clrUserRow(rowInd, colmns) {
 
         }
 
-        //removes special styling for completed row
-        document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5"][rowInd]).classList.remove("cplt");
-
     }
+
+    //removes special styling for completed row
+    document.getElementById("cplt").remove();
 
     //displaying the new row total needed
     showRemain(rowSums, goalVals);
@@ -989,7 +992,11 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 //come back to this...
                 //add background color to the total column of the completed row
                 //in the setTimeout function, add functionality for the total column in the row to reset to its default background color
-                document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5"][y]).classList.add("cplt");
+                let cpltIns = `<div id="cplt" class="cplt">
+                <h3>Bam! Row complete!</h3></div>`;
+
+                document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5"][y]).insertAdjacentHTML("afterbegin", cpltIns);
+
 
                 ///setTimeout function calls function to clear the row in the ui after 3 seconds...
                 setTimeout(clrUserRow, 3000, y, cols);
@@ -2136,17 +2143,21 @@ timeframe = 25;
 
 
 
-//progress notes as of 12/18/23...
+//progress notes as of 1/14/24...
 
 //CL 1760 and 1652... need to change back to the mvd and cmb image names once we have the styling nailed down for them... currently all using the valueN.png images
 
+//finished styling to completed row!!!
+//---need to add array of various sayings to be displayed when user completes row (maybe 40-50 says that eventually repeat???)
+//---template literal used so that we can insert different index of the array each time
+
 //need to create the selection for challenge mode or casual mode in the game start modal
 
-//created all tiles with no transparent background. need to decide on styling to moved and combined tiles
+//created all tiles with transparent background.---done!!!
+//need to decide on styling to moved and combined tiles
 
 //need to update rules and the readme
 
-//need to write logic to style completed row of 21 with special style before clearing it... adding className.add('twentyOne') with special css style for the row...
 
 //need to refactor whole code base... start with game initiation. can put much of it into a function which can be called at initial game init and also at game reset
 
@@ -2218,6 +2229,8 @@ timeframe = 25;
 //checkEnd is too complicated... simpliy it to avoid bugs---done!!!
 
 //make the wild bonus only available once per game---done!!!
+
+//need to write logic to style completed row of 21 with special style before clearing it---done!!!
 
 //bugs 12/21/23...
 //cant remove randomly-placed tile---fixed!!!
