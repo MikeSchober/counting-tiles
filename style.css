@@ -31,6 +31,7 @@ header {
     color: black;
     margin-top: 32px;
     margin-left: 102px;
+    margin-bottom: 15px;
 }
 
 .gameScore {
@@ -241,7 +242,6 @@ header h1 {
     background-color: #efe4b0;
     height: 250px;
     width: 250px;
-    margin-bottom: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -254,7 +254,6 @@ header h1 {
 
     max-height: 250px;
     max-width: 250px;
-
 }
 
 /* .cTile {
@@ -317,7 +316,7 @@ header h1 {
 
 .license {
 
-    margin-top: -20px;
+    margin-top: 10px;
     display: block;
     padding-left: 50px;
     text-wrap: none;
@@ -521,7 +520,7 @@ button:disabled {
     .currTile {
         height: 175px;
         width: 175px;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         margin: 0 auto;
 
     }
