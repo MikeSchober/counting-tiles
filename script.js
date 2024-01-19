@@ -130,6 +130,9 @@ let startModal = document.getElementById("introModal");
 //start button in the gamestart modal
 let startButton = document.getElementById("startPlay");
 
+//mode toggle button in gamestart modal
+let mode = document.getElementById("mode");
+
 //game end modal
 let endModal = document.getElementById("endModal");
 
@@ -175,6 +178,8 @@ let powers = [discard, remove, change, wild];
 
 //modal listeners
 startButton.addEventListener('click', startRandom);
+
+mode.addEventListener('click', modeToggle);
 
 againButton.addEventListener('click', gameReset);
 
@@ -495,7 +500,7 @@ function toSelect(event) {
         let cpltIns = `<div id="cplt" class="cplt">
             <h3>Bam! Row complete!</h3></div>`;
 
-        document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5"][Number(element.id[1])]).insertAdjacentHTML("afterbegin", cpltIns);
+        document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5", "row6"][Number(element.id[1])]).insertAdjacentHTML("afterbegin", cpltIns);
 
 
         ///setTimeout function calls function to clear the row in the ui after 3 seconds...
@@ -995,7 +1000,7 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 let cpltIns = `<div id="cplt" class="cplt">
                 <h3>Bam! Row complete!</h3></div>`;
 
-                document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5"][y]).insertAdjacentHTML("afterbegin", cpltIns);
+                document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5", "row6"][y]).insertAdjacentHTML("afterbegin", cpltIns);
 
 
                 ///setTimeout function calls function to clear the row in the ui after 3 seconds...
@@ -1507,6 +1512,32 @@ function startRandom() {
 
     drawing = true;
     startModal.classList.add('hidden');
+
+};
+
+//function to toggle game modes (defaults to on)
+//challenge var holds current mode status. defaults to true for challenge mode
+//this function is called when the mode button clicked
+//changes the styling of the mode button to OFF/ON, inverted colors
+//toggles the boolean in the chalenge variable
+function modeToggle() {
+
+    if (challenge === true) {
+
+        challenge = false;
+        mode.innerHTML = "Challenge mode: OFF"
+        mode.style.setProperty('background-color', 'beige');
+        mode.style.setProperty('color', 'black');
+
+    } else {
+
+        challenge = true;
+        mode.innerHTML = "Challenge mode: ON"
+        mode.style.setProperty('background-color', 'black');
+        mode.style.setProperty('color', 'beige');
+
+    }
+
 
 };
 

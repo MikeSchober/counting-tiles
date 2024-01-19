@@ -81,10 +81,15 @@ header h1 {
     align-items: center;
     justify-content: center;
     background-color: beige;
-    width: 30%;
+    width: 40%;
     margin: auto;
     padding: 25px;
     font-size: 25px;
+
+}
+
+.mContent h3 {
+    font-size: 32px;
 
 }
 
@@ -95,10 +100,10 @@ header h1 {
     color: black;
     display: block;
     text-align: center;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     margin-bottom: 12px;
     padding: 9px;
-    font-size: 20px;
+    font-size: 28px;
     width: 276px;
     height: 46px;
 
@@ -107,9 +112,9 @@ header h1 {
 .mContent a:hover {
 
 
-    font-size: 26px;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    font-size: 32px;
+    padding-top: 2.5px;
+    padding-bottom: 2.5px;
     margin-bottom: 12px;
 
 }
@@ -302,6 +307,13 @@ header h1 {
     display: none;
 }
 
+.off {
+
+    background-color: beige;
+    color: black;
+
+}
+
 
 .license {
 
@@ -429,6 +441,8 @@ button:disabled {
 
 
 
+
+
 /*for responsive design... less than width of 1190 needs to be adjusted to column display*/
 
 
@@ -457,9 +471,10 @@ button:disabled {
 
     .mContent a {
 
-        margin-bottom: 12px;
+        margin-top: 8px;
+        margin-bottom: 10px;
         padding: 9px;
-        font-size: 20px;
+        font-size: 24px;
         width: 200px;
         height: 45px;
 
@@ -467,10 +482,10 @@ button:disabled {
 
     .mContent a:hover {
 
-        font-size: 26px;
-        padding-top: 4px;
-        padding-bottom: 4px;
-        margin-bottom: 12px;
+        font-size: 28px;
+        padding-top: 2.5px;
+        padding-bottom: 2.5px;
+        margin-bottom: 10px;
 
     }
 
@@ -558,8 +573,9 @@ button:disabled {
 
     .mContent a {
 
-        border: 1px solid black;
-        margin-bottom: 30px;
+        /* border: 1px solid black; */
+        margin-top: 12px;
+        margin-bottom: 20px;
         padding: 13px;
         font-size: 30px;
         width: 394px;
@@ -569,8 +585,10 @@ button:disabled {
 
     .mContent a:hover {
 
-        font-size: 25px;
+        font-size: 34px;
         margin-bottom: 7px;
+        padding-top: 4.5px;
+        padding-bottom: 4.5px;
 
     }
 
