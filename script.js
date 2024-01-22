@@ -22,6 +22,9 @@ let highScore = 0;
 //moved from within the genTiles function to the global scope so that we can access this from the addLarger function when adding the larger tiles to the dist after each row completed
 let ident = 0;
 
+//holds number of games played
+let attempts = 0;
+
 //holds boolean for whether or not user chose to play challenge mode
 //when challenge mode selected and this is true, the time intervals between random tile placements decrease incrementally
 //need to create the selection for this in the game start modal
@@ -1225,6 +1228,12 @@ function gameReset() {
     //holds number of completed rows of 21
     completedRows = 0;
 
+    //updating the completed rows count in the ui
+    let viewRows = `<p>${completedRows}<p>`;
+    rs.removeChild(rs.children[0]);
+    rs.insertAdjacentHTML("afterbegin", viewRows);
+
+
     //holds the number of moved tiles
     moves = 0;
 
@@ -1286,6 +1295,25 @@ function gameReset() {
     //total number of remaining tiles to be drawn is initiated
     remaining = allTiles.length;
     console.log(`tiles remaining to be drawn: ${remaining}`);
+
+    //inserts/updates high score display
+    if (attempts > 0) {
+
+        //removes the current high score
+        document.getElementById("highSc").remove();
+
+        //displays high score below the bonus buttons
+        document.getElementById("play").insertAdjacentHTML('beforeend', `<div id="highSc"><img src="images/highScr.png" alt="high score" class="highScore"><p id="hs">${highScore}</p></div>`);
+
+    } else {
+
+        //displays high score below the bonus buttons
+        document.getElementById("play").insertAdjacentHTML('beforeend', `<h2 id="dash">-----------------------</h2><div id="highSc"><img src="images/highScr.png" alt="high score" class="highScore"><p id="hs">${highScore}</p></div>`);
+
+    }
+
+    //increments number of games played
+    attempts++;
 
     //displays modal to start game again
     endModal.classList.add('hidden')

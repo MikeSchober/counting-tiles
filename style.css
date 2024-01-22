@@ -293,6 +293,34 @@ header h1 {
     padding: 2px 3px;
 }
 
+#dash {
+    align-self: center;
+    margin: -10px;
+
+}
+
+.highScore {
+    height: 30px;
+    width: 140px;
+
+}
+
+#hs {
+    align-self: center;
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+#highSc {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+
+
+}
+
 /*END CURR TILE AND PSBL ACTIONS STYLE*/
 
 
