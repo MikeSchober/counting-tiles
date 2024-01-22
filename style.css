@@ -89,9 +89,37 @@ header h1 {
 
 }
 
-.mContent h3 {
-    font-size: 32px;
+.mContent h1 {
+    text-align: center;
+    margin-top: 5px;
+}
 
+.mContent h2 {
+    text-align: center;
+    font-size: 35px;
+}
+
+.mContent h3 {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.mContent h4 {
+    margin-top: -20px;
+}
+
+.mContent ul {
+    list-style-type: none;
+    margin-bottom: 20px;
+}
+
+.mContent ul li {
+    padding: 2px 0px;
+
+}
+
+#playAgain {
+    margin-top: 10px;
 }
 
 .mContent a {

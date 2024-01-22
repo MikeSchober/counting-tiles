@@ -76,6 +76,12 @@ let goalVals = [];
 //holds the aggregate value saved by combining tiles (number)
 let ttlSaved = 0;
 
+//holds the number of moved tiles
+let moves = 0;
+
+//holds the number of combined tiles
+let ttlCombined = 0;
+
 //array to hold the status of the available bonuses
 //defaults to zero for each
 //changes to value of one if bonus should be active
@@ -497,8 +503,11 @@ function toSelect(event) {
         //come back to this...
         //add background color to the total column of the completed row
         //in the setTimeout function, add functionality for the total column in the row to reset to its default background color
-        let cpltIns = `<div id="cplt" class="cplt">
-            <h3>Bam! Row complete!</h3></div>`;
+        /*let cpltIns = `<div id="cplt" class="cplt">
+            <h3>Bam! Row complete!</h3></div>`;*/
+
+        let cpltIns = congrats(completedRows);
+
 
         document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5", "row6"][Number(element.id[1])]).insertAdjacentHTML("afterbegin", cpltIns);
 
@@ -838,8 +847,13 @@ function clrUserRow(rowInd, colmns) {
 
     }
 
-    //removes special styling for completed row
-    document.getElementById("cplt").remove();
+    //only tries to remove special styling if it exists in the row being cleared
+    if (document.getElementById(`row${rowInd}`).firstChild === document.getElementById("cplt")) {
+
+        //removes special styling for completed row
+        document.getElementById("cplt").remove();
+
+    };
 
     //displaying the new row total needed
     showRemain(rowSums, goalVals);
@@ -887,6 +901,16 @@ function clrValRow(tVals, rowInd, colmns) {
 
 };
 
+
+//function to generate the row completion messages
+//takes the number of completed rows as arg
+function congrats(cmpltRows) {
+
+    let sayings = [`Bam! Row complete!`, `You rock!`, `Allstar tile-mover!`, `Always gettin the job done!`, `Another one? Already?`, `Movin tiles like a boss!`, `Tile-moving rockstar!`, `Look at all these points!`, `You make it look easy!`, `Is it too easy?!?`, `Another 350!`, `That's ${cmpltRows}!`, `Bam! Bam! Bam! Row complete!`, `Another one on the board!`, `What's your high score again?`, `I'm out of words...`, `Done!`, `Finished!`, `Complete!`, `Another one!`, `And another one!`, `And another one!`, `Do you ever get tired?!?`, `And... wow`, `Personal record yet?`, `Keep em' rollin!`, `I think I might have lost count...`, `${cmpltRows} complete?!? Wow.`];
+
+    return `<div id="cplt" class="cplt"><h3>${sayings[((cmpltRows - 1) % sayings.length)]}</h3></div>`;
+
+};
 
 
 //function to check for full row that adds up to 21, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again. (this logic will need to run after a tile is placed, moved, or combined (when i write the logic for tiles to be combined))
@@ -997,8 +1021,10 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 //come back to this...
                 //add background color to the total column of the completed row
                 //in the setTimeout function, add functionality for the total column in the row to reset to its default background color
-                let cpltIns = `<div id="cplt" class="cplt">
-                <h3>Bam! Row complete!</h3></div>`;
+                /*let cpltIns = `<div id="cplt" class="cplt">
+                <h3>Bam! Row complete!</h3></div>`;*/
+
+                let cpltIns = congrats(completedRows);
 
                 document.getElementById(["row0", "row1", "row2", "row3", "row4", "row5", "row6"][y]).insertAdjacentHTML("afterbegin", cpltIns);
 
@@ -1090,12 +1116,21 @@ function checkEnd() {
     };
 
     //updating the modal to show the final score
-    let endScore = `<div><h3>Game over!</h3>
+    let endScore = `<div><h1>Game over!</h1>
         <br>
-        <h4>Final score: ${score}</h4>
+        <h2>Final score: ${score}</h2>
         <br>
-        <h3>Nice job!</h3>
-        <br></div>`;
+        <h4>---------------------------------------------</h4>
+        <h3>Your stats!</h3>
+        <ul>
+            <li>Completed rows: ${completedRows}</li>
+            <li>Placed tiles: ${placed}</li>
+            <li>Tiles moved: ${moves}</li>
+            <li>Tiles combined: ${ttlCombined}</li>
+            <li>Total value saved by combining: ${ttlSaved}</li>
+        </ul>
+        <h4>---------------------------------------------</h4>
+        </div>`;
     endMsg.removeChild(endMsg.children[0]);
     endMsg.insertAdjacentHTML("afterbegin", endScore);
 
@@ -1189,6 +1224,15 @@ function gameReset() {
 
     //holds number of completed rows of 21
     completedRows = 0;
+
+    //holds the number of moved tiles
+    moves = 0;
+
+    //holds the number of combined tiles
+    ttlCombined = 0;
+
+    //holds ttl value saved
+    ttlSaved = 0;
 
     //array to hold the status of the available bonuses
     //defaults to zero for each
@@ -1727,6 +1771,9 @@ function dropTile(e) {
                 ttlSaved = savedValues(gameTiles);
                 console.log(`total saved: ${ttlSaved}`);
 
+                //incrementing the ttlCombined number
+                ttlCombined++;
+
                 //recalculating and updating the score
                 //recalc...
                 score = (ttlSaved + (completedRows * 350));
@@ -1823,6 +1870,9 @@ function dropTile(e) {
 
                 //displaying the new row total needed
                 showRemain(rowSums, goalVals);
+
+                //incrementing the ttl moved variable
+                moves++;
 
                 //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
                 checkSum(rowSums, gameTiles, gameboard, 6);
@@ -2057,7 +2107,7 @@ function checkCombine(start, stop, tVals) {
         //checking for a valid combo...
         //if the modulus between the tile being dragged and the tile with which it is being combined equals zero, the combine operation is allowed, division of the larger tile by the smaller tile is executed, and the larger tile takes on the quotient
         //does not allow division that results in one!
-        if (((tVals[startY][startX]) % (tVals[stopY][stopX]) === 0) && ((tVals[startY][startX]) / (tVals[stopY][stopX]) != 1)) {
+        if (((tVals[startY][startX]) % (tVals[stopY][stopX]) === 0) && ((tVals[startY][startX]) / (tVals[stopY][stopX]) != 1) && ((tVals[stopY][stopX] != 1))) {
 
             cmb = (tVals[startY][startX]) / (tVals[stopY][stopX]);
             console.log(`legal cmb! cmb = ${cmb}`);
