@@ -927,7 +927,7 @@ function clrValRow(tVals, rowInd, colmns) {
 //takes the number of completed rows as arg
 function congrats(cmpltRows) {
 
-    let sayings = [`Bam! Row complete!`, `You rock!`, `Allstar tile-mover!`, `Always gettin the job done!`, `Another one? Already?`, `Movin tiles like a boss!`, `Tile-moving rockstar!`, `Look at all these points!`, `You make it look easy!`, `Is it too easy?!?`, `Another 350!`, `That's ${cmpltRows}!`, `Bam! Bam! Bam! Row complete!`, `Another one on the board!`, `What's your high score again?`, `I'm out of words...`, `Done!`, `Finished!`, `Complete!`, `Another one!`, `And another one!`, `And another one!`, `Do you ever get tired?!?`, `And... wow`, `Personal record yet?`, `Keep em' rollin!`, `I think I might have lost count...`, `${cmpltRows} complete?!? Wow.`];
+    let sayings = [`Bam! Row complete!`, `You rock!`, `Allstar tile-mover!`, `Always gettin the job done!`, `Another one? Already?`, `Movin tiles like a boss!`, `Tile-moving rockstar!`, `Look at all these points!`, `You make it look easy!`, `Is it too easy?!?`, `Another 350!`, `That's ${cmpltRows}!`, `Bam! Bam! Bam!`, `Another one on the board!`, `What's your high score again?`, `I'm out of words...`, `Done!`, `Finished!`, `Complete!`, `Another one!`, `And another one!`, `And another one!`, `Do you ever get tired?!?`, `And... wow`, `Personal record yet?`, `Keep em' rollin!`, `I think I might have lost count...`, `${cmpltRows} complete?!? Wow.`];
 
     return `<div id="cplt" class="cplt"><h3>${sayings[((cmpltRows - 1) % sayings.length)]}</h3></div>`;
 
