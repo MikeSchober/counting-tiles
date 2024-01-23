@@ -324,6 +324,24 @@ function toSelect(event) {
         remaining = allTiles.length;
         console.log(`tiles remaining to be drawn: ${remaining}`);
 
+        //regenerates tile bag if tiles remaining is less than 7
+        if ((remaining < 7) && (completedRows < 18)) {
+
+            allTiles = genTiles([100, 120, 100, 120, 100, 120, 70, 120, 90, 90, 70, 120, 70, 70]);
+
+            //adds the larger tiles that were in the dist
+            for (let x = 0; x < completedRows; x++) {
+
+                addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], x, 50);
+            }
+
+        } else if (remaining < 7) {
+
+            //adds all psbl tiles to the dist
+            allTiles = genTiles([100, 120, 100, 120, 100, 120, 70, 120, 90, 90, 70, 120, 70, 70, 50, 50, 0, 50, 0, 50, 50, 50, 0, 50, 50, 50, 50, 50, 0, 50, 0, 50, 0, 50, 50, 50, 0, 0, 0, 50]);
+
+        };
+
         //places random tile on board
         //took this out when added random interval adjustment functionality
         // setTimeout(placeRandom, 3000);
@@ -497,7 +515,7 @@ function toSelect(event) {
 
             //add next larger tile value to the distribution
             //completedRows -1 is second arg bc it has already been incremented here and we need to start at index zero
-            addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], (completedRows - 1), 5);
+            addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], (completedRows - 1), 50);
 
 
         };
@@ -1014,7 +1032,7 @@ function checkSum(sArr, tObjs, tVals, cols) {
 
                     //add next larger tile value to the distribution
                     //completedRows -1 is second arg bc it has already been incremented here and we need to start at index zero
-                    addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], (completedRows - 1), 5);
+                    addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], (completedRows - 1), 50);
 
 
                 };
@@ -1157,7 +1175,7 @@ function gameReset() {
 
     //tile bag created
     //UPDATED TO CREATE NEW DISTRIBUTION (1-14)
-    allTiles = genTiles([10, 12, 10, 12, 10, 12, 7, 12, 9, 9, 7, 12, 7, 7]);
+    allTiles = genTiles([100, 120, 100, 120, 100, 120, 70, 120, 90, 90, 70, 120, 70, 70]);
 
     //old dist... too hard
     //2, 2, 3, 4, 5, 7, 7, 7, 6, 6, 5, 4, 3, 3
@@ -1557,6 +1575,25 @@ function placeRandom() {
 
             //checking for game end
             checkEnd();
+
+
+            //regenerates tile bag if tiles remaining is less than 7
+            if ((remaining < 7) && (completedRows < 18)) {
+
+                allTiles = genTiles([100, 120, 100, 120, 100, 120, 70, 120, 90, 90, 70, 120, 70, 70]);
+
+                //adds the larger tiles that were in the dist
+                for (let x = 0; x < completedRows; x++) {
+
+                    addLarger([15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 34, 35, 36, 40], x, 50);
+                }
+
+            } else if (remaining < 7) {
+
+                //adds all psbl tiles to the dist
+                allTiles = genTiles([100, 120, 100, 120, 100, 120, 70, 120, 90, 90, 70, 120, 70, 70, 50, 50, 0, 50, 0, 50, 50, 50, 0, 50, 50, 50, 50, 50, 0, 50, 0, 50, 0, 50, 50, 50, 0, 0, 0, 50]);
+
+            };
 
             //adjRandom slowed-down the placement of random tiles as the board filled up. removed this for now
             //check for random interval adjustment
@@ -2174,7 +2211,7 @@ function checkCombine(start, stop, tVals) {
 
 //tile bag created
 //UPDATED TO CREATE NEW DISTRIBUTION (1-14)
-allTiles = genTiles([10, 12, 10, 12, 10, 12, 7, 12, 9, 9, 7, 12, 7, 7]);
+allTiles = genTiles([100, 120, 100, 120, 100, 120, 70, 120, 90, 90, 70, 120, 70, 70]);
 
 //old dist... too hard
 //2, 2, 3, 4, 5, 7, 7, 7, 6, 6, 5, 4, 3, 3
