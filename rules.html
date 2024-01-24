@@ -69,9 +69,9 @@
 
     <h2>Welcome to Counting Tiles!</h2>
     <img id="screenOne" src="images/s5.png" alt="screenshot" height="311px" width="289px">
-    <h2>Objective: To strategically place tiles in an attempt to reach various row values</h2>
+    <h2>Objective: To strategically place tiles in an attempt to reach specific row values</h2>
     <h2>It's harder than it sounds!</h2>
-    <p id="fl">The gameboard automatically starts with seven tiles placed. To achieve the specific row values, tiles can
+    <p id="fl">The gameboard automatically starts with seven tiles placed. To achieve the needed row values, tiles can
         be
         placed on the gameboard, moved, or
         combined with each other. At game-start, randomly-generated tiles are placed in open spaces on
@@ -86,7 +86,8 @@
     </p>
 
     <h3>MOVING TILES</h3>
-    <p>Tiles can be moved to an adjacent square (not diagonally), but each tile can only be moved once. When a tile is
+    <p>Tiles can be moved to an adjacent square (not diagonally), but each tile can only be moved once. A moved tile can
+        be subsequently combined, but it cannot be moved again. When a tile is
         moved, the currently-drawn tile is automatically discarded and a new tile is drawn.</p>
 
     <h3>COMBINING TILES</h3>
@@ -96,7 +97,8 @@
         the quotient value of 2. Once tiles are combined, they cannot be moved, but tiles can be combined without limit.
         As another example, tile A has a value of 8 and tile B has a value of 2. Tile A can be combined with tile B
         twice. The 8 becomes a 4, then, after combining again, the 4 becomes a 2. Each time a tile is combined, the
-        currently-drawn tile is automatically discarded and a new tile is drawn.</p>
+        currently-drawn tile is automatically discarded and a new tile is drawn. Tiles of sharing the same value cannot
+        be combined, and a tile cannot be combined with a tile holding the value of one.</p>
 
     <h3>COMPLETING A ROW</h3>
     <p>For a row to be completed, it must be completely filled and the sum of the tile values in the row must be exactly
@@ -123,13 +125,14 @@
 
     <h3>Scoring</h3>
     <p>As tiles are combined and the tile values on the gameboard are decreased, points are awarded according
-        to the aggregate tile value savings. For example, tile A has a value of 10 and is combined with tile B that has
+        to the tile value savings. For example, tile A has a value of 10 and is combined with tile B that has
         a value of 5. Tile A now holds a tile value of 2, and 8 points are immediately awarded. Additionally, 350 points
         are awarded for each completed row.</p>
 
     <h3>Challenge mode</h3>
     <p>The default gameplay mode is called "challenge mode" and it plays as described throughout these rules. Toggling
-        challenge mode to "off" before gamestart results in the same gameplay experience, without the decreasing time
+        challenge mode to "off" before gamestart results in the same gameplay experience, just without the decreasing
+        time
         interval between the placements of the random tiles. This more casual game mode is intended to be a more
         relaxing
         version of this fast-paced game.</p>
