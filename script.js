@@ -1,8 +1,6 @@
 'use strict';
 
-//version 0.4.0
-//includes total saved count as getter within the tile objs and allows infinite combining
-//also adds decreasing time interval between random placements, increasing tile value distribution (both happen as rows are completed), and challenge mode logic (still need user selection for it)
+//version 1.0.0
 
 ///////
 //GLOBAL VARS//
