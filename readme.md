@@ -14,7 +14,7 @@ As the game progresses, the interval between the placement of random tiles decre
 I love writing JavaScript logic, and this project has been so much fun. It's simple, yet fascinating, and I hope people enjoy the result.
 
 ## Screenshot
-![output screenshot](https://github.com/Runningman47/counting-tiles/blob/main/images/s2.png)
+![output screenshot](https://github.com/MikeSchober/counting-tiles/blob/main/images/s2.png)
 
 ## Updates
 This is version one of the game, as I think I have finally achieved a good balance between the tile value distribution, the random tile placement logic, and the overall gameplay structure. I am currently working on several projects, but suggestions and improvements here are welcome! Fork the repo and open a PR, requesting to pull into `main`!
