@@ -23,7 +23,6 @@ html {
 
 header {
     display: flex;
-    flex-wrap: nowrap;
     flex-direction: row;
     /* border: 2px solid black; */
     height: 30px;
@@ -383,6 +382,7 @@ header h1 {
 .license h4 {
 
     margin-top: -5px;
+    font-size: 1.1rem;
 
 }
 
@@ -390,6 +390,12 @@ header h1 {
 
     display: block;
     margin-top: 10px;
+
+}
+
+#priv a {
+    font-size: 1.3rem;
+    margin: 0;
 
 }
 
@@ -503,7 +509,7 @@ button:disabled {
 
 /*ipad is max width of 1024px... so anything less than that gets formatted with the following styling code... top-nav hidden, top-menu displayed*/
 
-@media screen and (max-width: 1190px) {
+@media screen and (min-width: 951px) and (max-width: 1190px) {
 
     .modal {
         padding-top: 20%;
@@ -530,7 +536,7 @@ button:disabled {
         margin-bottom: 10px;
         padding: 9px;
         font-size: 24px;
-        width: 200px;
+        /* width: 200px; */
         height: 45px;
 
     }
@@ -610,32 +616,26 @@ button:disabled {
 }
 
 /*ipad is max width of 1024px... so anything less than that gets formatted with the following styling code... top-nav hidden, top-menu displayed*/
-@media screen and (max-width: 950px) {
+@media screen and (min-width: 0px) and (max-width: 950px) {
 
 
-    .modal {
-        padding-top: 45%;
-
-    }
 
     .mContent {
         width: 80%;
         margin: auto;
         padding: 25px;
-        font-size: 30px;
+        font-size: 1rem;
 
     }
 
     .mContent a {
 
         /* border: 1px solid black; */
-        margin-top: 12px;
-        margin-bottom: 20px;
-        padding: 13px;
-        font-size: 30px;
-        width: 394px;
-        height: 65px;
-
+        padding: 0;
+        font-size: 1.5rem;
+        margin-bottom: 0;
+        text-decoration: underline;
+        margin-top: 5px;
     }
 
     .mContent a:hover {
@@ -652,18 +652,36 @@ button:disabled {
 
         color: black;
         background-color: beige;
-        height: 70px;
-        width: 400px;
-        font-size: 30px;
+        height: 40px;
+        font-size: 1.5rem;
         margin-bottom: 5px;
 
     }
 
-
-    html {
-        overflow: scroll;
+    .mContent h3 {
+        font-size: 1.5rem;
+        margin: 0;
 
     }
+
+    .mContent h4 {
+        margin: 0;
+
+    }
+
+    .mContent p {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    #priv {
+        margin-top: 20px;
+    }
+
+    /* html {
+        overflow: scroll;
+
+    } */
 
 
     .psblActions {
@@ -679,11 +697,17 @@ button:disabled {
 
     header {
         height: 40px;
-        width: 650px;
         color: black;
-        margin-top: 7%;
-        margin-left: 7%;
-        margin-bottom: 0px;
+        margin: 7% 0 0 7%;
+        width: 280px;
+        justify-content: space-between;
+        margin: 20px auto 0 auto;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+        display: inline-block;
+
     }
 
     .gameScore {
@@ -698,7 +722,7 @@ button:disabled {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 500px;
+        /* width: 500px; */
     }
 
     .gameplay {
@@ -717,38 +741,44 @@ button:disabled {
 
     }
 
+    .cell {
+        width: 45px;
+        height: 45px;
+    }
+
+    .rowNeeded {
+        width: 70px;
+        height: 45px;
+        font-size: 1.5rem;
+    }
+
     .play {
         align-self: flex-start;
         border: 4px solid black;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-content: center;
-        margin-left: 27%;
         margin-top: 20px;
-        transform: scale(1);
     }
 
 
     .currTile {
-        height: 175px;
-        width: 175px;
-        margin-bottom: 10px;
-        margin: 0 auto;
+        height: 70px;
+        width: 70px;
+        margin: 10px auto 5px auto;
 
     }
 
     .currTile img {
 
-        max-height: 140px;
-        max-width: 140px;
+        max-height: 50px;
+        max-width: 50px;
 
     }
 
     button {
         font-size: 16px;
-        width: 320px;
-        height: 70px;
+        height: 30px;
         margin-top: 3px;
         padding: 2% 2%;
 
@@ -756,14 +786,10 @@ button:disabled {
 
 
     .license {
-        margin-top: 9%;
-        margin-left: 20%;
-        /* display: inline; */
-        padding-left: 0px;
-        padding-bottom: 5%;
-        text-wrap: wrap;
-        width: 400px;
-        transform: scale(1);
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        width: 300px;
 
     }
 }
