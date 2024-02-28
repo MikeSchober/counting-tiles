@@ -493,7 +493,7 @@ function toSelect(event) {
         console.log(`SCORE UPDATE: ${score}`);
 
         //updating the score disolay in the ui
-        let viewScore = `<h1>${score}</h1>`;
+        let viewScore = `<h1>Score: ${score}</h1>`;
         scr.removeChild(scr.children[0]);
         scr.insertAdjacentHTML("afterbegin", viewScore);
 
@@ -1003,7 +1003,7 @@ function checkSum(sArr, tObjs, tVals, cols) {
                 console.log(`SCORE UPDATE: ${score}`);
 
                 //updating the score disolay in the ui
-                let viewScore = `<h1>${score}</h1>`;
+                let viewScore = `<h1>Score: ${score}</h1>`;
                 scr.removeChild(scr.children[0]);
                 scr.insertAdjacentHTML("afterbegin", viewScore);
 
@@ -1234,7 +1234,7 @@ function gameReset() {
 
 
     //resetting the score disolay in the ui
-    let viewScore = `<h1>${score}</h1>`;
+    let viewScore = `<h1>Score: ${score}</h1>`;
     scr.removeChild(scr.children[0]);
     scr.insertAdjacentHTML("afterbegin", viewScore);
 
@@ -1843,7 +1843,7 @@ function dropTile(e) {
                 console.log(`SCORE UPDATE: ${score}`);
 
                 //updating the score disolay in the ui
-                let viewScore = `<h1>${score}</h1>`;
+                let viewScore = `<h1>Score: ${score}</h1>`;
                 scr.removeChild(scr.children[0]);
                 scr.insertAdjacentHTML("afterbegin", viewScore);
 

@@ -24,13 +24,14 @@ html {
 header {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     /* border: 2px solid black; */
     height: 30px;
-    width: 650px;
+    width: 620px;
     color: black;
     margin-top: 32px;
     margin-left: 102px;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
 .gameScore {
@@ -65,7 +66,7 @@ header h1 {
     position: fixed;
     display: block;
     z-index: 1;
-    padding-top: 15%;
+    padding-top: 7%;
     top: 0;
     left: 0;
     height: 100%;
@@ -79,12 +80,11 @@ header h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     background-color: beige;
-    width: 40%;
+    width: 70%;
     margin: auto;
     padding: 25px;
-    font-size: 25px;
+    font-size: 1.3rem;
 
 }
 
@@ -101,10 +101,16 @@ header h1 {
 .mContent h3 {
     text-align: center;
     margin-bottom: 5px;
+    font-size: 1.7rem;
 }
 
 .mContent h4 {
-    margin-top: -20px;
+    margin-top: 20px;
+}
+
+.mContent p {
+    margin-bottom: 15px;
+    text-align: center;
 }
 
 .mContent ul {
@@ -123,27 +129,13 @@ header h1 {
 
 .mContent a {
 
-    text-decoration: none;
     background-color: beige;
     color: black;
     display: block;
     text-align: center;
-    /* border: 1px solid black; */
     margin-bottom: 12px;
     padding: 9px;
-    font-size: 28px;
-    width: 276px;
-    height: 46px;
-
-}
-
-.mContent a:hover {
-
-
-    font-size: 32px;
-    padding-top: 2.5px;
-    padding-bottom: 2.5px;
-    margin-bottom: 12px;
+    font-size: 1.5rem;
 
 }
 
@@ -153,7 +145,7 @@ header h1 {
     color: black;
     background-color: beige;
     height: 50px;
-    font-size: 20px;
+    font-size: 1.5rem;
 
 }
 
@@ -253,14 +245,11 @@ header h1 {
 /*CURRENT TILE AND PSBL ACTIONS STLYING*/
 
 .play {
-    align-self: flex-start;
+    /* align-self: flex-start; */
     border: 4px solid black;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-content: center;
     margin-left: 30px;
-    margin-top: 20px;
 }
 
 
@@ -386,12 +375,6 @@ header h1 {
 
 }
 
-#priv {
-
-    display: block;
-    margin-top: 10px;
-
-}
 
 #priv a {
     font-size: 1.3rem;
@@ -512,78 +495,80 @@ button:disabled {
 @media screen and (min-width: 951px) and (max-width: 1190px) {
 
     .modal {
-        padding-top: 20%;
-
+        padding-top: 13%;
     }
 
 
     .mContent {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: beige;
-        width: 45%;
+        width: 80%;
         margin: auto;
         padding: 25px;
-        font-size: 25px;
+        font-size: 1rem;
 
     }
 
     .mContent a {
 
-        margin-top: 8px;
+        /* border: 1px solid black; */
+        padding: 0;
+        font-size: 1.5rem;
         margin-bottom: 10px;
-        padding: 9px;
-        font-size: 24px;
-        /* width: 200px; */
-        height: 45px;
-
+        text-decoration: underline;
+        margin-top: 5px;
     }
 
-    .mContent a:hover {
-
-        font-size: 28px;
-        padding-top: 2.5px;
-        padding-bottom: 2.5px;
-        margin-bottom: 10px;
-
-    }
 
     .mContent button {
 
         color: black;
         background-color: beige;
-        height: 50px;
-        font-size: 20px;
+        font-size: 1.5rem;
+        margin-bottom: 5px;
 
     }
 
-    .play {
-        transform: scale(.8);
-        margin-left: 0px;
-        margin-top: 70px;
+    .mContent h3 {
+        font-size: 1.5rem;
+        margin: 0;
 
     }
 
-    .license {
-        margin-top: 10px;
-        transform: scale(.7);
-        margin-left: -40px;
-        padding-left: 0px;
+    .mContent h4 {
+        margin-top: 12px;
 
     }
+
+    .mContent p {
+        text-align: center;
+        margin-bottom: 5px;
+        font-size: 1.3rem;
+    }
+
+    #priv {
+        margin-top: 20px;
+    }
+
 
     header {
         margin-bottom: 15px;
         height: 40px;
     }
 
+    /* .gameplay {} */
+
+
+    #priv a {
+        margin: 10px 0;
+    }
+
+    .play {
+        margin: 0 0 0 5px;
+    }
+
     .currTile {
         height: 175px;
         width: 175px;
-        margin-bottom: 20px;
-        margin: 0 auto;
+        margin: 5px auto;
 
     }
 
@@ -605,20 +590,15 @@ button:disabled {
 
     }
 
-    button {
-        font-size: 16px;
-        width: 200px;
-        height: 50px;
-        margin-top: 3px;
-        padding: 2% 2%;
 
-    }
 }
 
 /*ipad is max width of 1024px... so anything less than that gets formatted with the following styling code... top-nav hidden, top-menu displayed*/
 @media screen and (min-width: 0px) and (max-width: 950px) {
 
-
+    .modal {
+        padding-top: 3%;
+    }
 
     .mContent {
         width: 80%;
@@ -633,17 +613,8 @@ button:disabled {
         /* border: 1px solid black; */
         padding: 0;
         font-size: 1.5rem;
-        margin-bottom: 0;
+        margin: 12px 0;
         text-decoration: underline;
-        margin-top: 5px;
-    }
-
-    .mContent a:hover {
-
-        font-size: 34px;
-        margin-bottom: 7px;
-        padding-top: 4.5px;
-        padding-bottom: 4.5px;
 
     }
 
@@ -652,7 +623,6 @@ button:disabled {
 
         color: black;
         background-color: beige;
-        height: 40px;
         font-size: 1.5rem;
         margin-bottom: 5px;
 
@@ -665,17 +635,22 @@ button:disabled {
     }
 
     .mContent h4 {
-        margin: 0;
+        margin-top: 15px;
 
     }
 
     .mContent p {
         text-align: center;
         margin-bottom: 5px;
+        font-size: 1rem;
     }
 
     #priv {
-        margin-top: 20px;
+        margin-top: 10px;
+    }
+
+    #priv a {
+        margin: 5px 0;
     }
 
     /* html {
@@ -696,10 +671,10 @@ button:disabled {
 
 
     header {
-        height: 40px;
+        height: auto;
         color: black;
         margin: 7% 0 0 7%;
-        width: 280px;
+        width: 340px;
         justify-content: space-between;
         margin: 20px auto 0 auto;
     }
@@ -728,7 +703,6 @@ button:disabled {
     .gameplay {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
         margin: 0 auto;
         padding-right: 5px;
@@ -773,14 +747,6 @@ button:disabled {
 
         max-height: 50px;
         max-width: 50px;
-
-    }
-
-    button {
-        font-size: 16px;
-        height: 30px;
-        margin-top: 3px;
-        padding: 2% 2%;
 
     }
 
