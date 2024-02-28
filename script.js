@@ -2,6 +2,8 @@
 
 //version 1.0.0
 
+//touch
+
 ///////
 //GLOBAL VARS//
 
@@ -254,7 +256,7 @@ function toSelect(event) {
         space = element.id;
 
         //placing the currTile on the clicked space on the gameboard
-        let placeTile = `<img src="${currTile.image}" alt="CURRENT TILE" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${currTile.id}">`;
+        let placeTile = `<img src="${currTile.image}" alt="CURRENT TILE" draggable="true" ondragstart="dragTile(event)" ontouchmove="touchDrag(e)" ontouchend="touchDrop(e)" class="pTile" id="tile${currTile.id}">`;
         element.insertAdjacentHTML("afterbegin", placeTile);
 
         //changing the cell background color to style the placed tile
@@ -398,7 +400,7 @@ function toSelect(event) {
 
 
         //adds the new img
-        let one = `<img src="images/1n.png" alt="special tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[Number(element.parentElement.id[1])][Number(element.parentElement.id[3])].id}">`;
+        let one = `<img src="images/1n.png" alt="special tile" draggable="true" ondragstart="dragTile(event)" ontouchmove="touchDrag(e)" ontouchend="touchDrop(e)"  class="pTile" id="tile${gameTiles[Number(element.parentElement.id[1])][Number(element.parentElement.id[3])].id}">`;
 
         //inserts the new tile img into the dragged tile's orig position on the gamebaord
         element.parentElement.insertAdjacentHTML("afterbegin", one);
@@ -436,7 +438,7 @@ function toSelect(event) {
         console.log(`element id for wild!!!: ${element.id}`);
 
         //placing the currTile on the clicked space on the gameboard
-        let placeWild = `<img src="images/wild.png" alt="WILD TILE" draggable="true" ondragstart="dragTile(event)" class="pTile">`;
+        let placeWild = `<img src="images/wild.png" alt="WILD TILE" draggable="true" ondragstart="dragTile(event)" ontouchmove="touchDrag(e)" ontouchend="touchDrop(e)"  class="pTile">`;
         element.insertAdjacentHTML("afterbegin", placeWild);
 
         //changes the value of the row in the rowSums matrix to 21
@@ -1532,7 +1534,7 @@ function placeRandom() {
 
             //placing the currTile on the clicked space on the gameboard
             //need to chg img path here for css background color styling
-            let placingRandom = `<img src="images/${r.value}n.png" alt="random tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${r.id}">`;
+            let placingRandom = `<img src="images/${r.value}n.png" alt="random tile" draggable="true" ondragstart="dragTile(event)" ontouchmove="touchDrag(e)" ontouchend="touchDrop(e)"  class="pTile" id="tile${r.id}">`;
             tgt.insertAdjacentHTML("afterbegin", placingRandom);
 
             //adds class for random tile background styling
@@ -1730,6 +1732,258 @@ function addLarger(newVals, ind, numLarge) {
 
 //functions for moving and combining tiles
 
+///////touch
+
+let movingData;
+
+//function to touch begin
+function touchDrag(e) {
+
+    e.preventDefault();
+
+    console.log(`the id: ${e.touches[0]}`);
+
+    // origLoc = e.target.parentElement.id;
+
+    // movingData = e.target.id;
+
+};
+
+
+//function to end touch
+function touchDrop(e) {
+
+
+    console.log(`target id (should be location from html): ${e.target.id}`);
+    console.log(`target parent element id: ${e.target.parentElement.id}`);
+
+
+    //if the e.target.id (the div) already contains an img, then execute the combine test logic
+    if (e.target.tagName === 'IMG') {
+
+
+        //if the div contains an img already, the target.id now becomes the img id. bc we need the div id, we need to call e.target.parentElement.id in these situations. thus, must run the checkAdjacent function seperately for the combining and the moving scenarios...
+        if (checkAdjacent(origLoc, e.target.parentElement.id)) {
+
+
+            //added infinite combining...
+            //on adding the random tile placement functionality, took out the restriction that stopped user from moving and then combining tiles
+            //user can now move and then combine tiles, but cannot combine and then move. once a tile is combined, it cannot be moved but it can be combined again
+            // if (gameTiles[origLoc[1]][origLoc[3]].combined === false) {
+
+
+            //combine tile logic here
+            //function to take the ids from both the starting div and the drop target div and to use those id (location) values to take the tile values from the tile values matrix and determine the combined value (9/3 or 4/2)... this then returns the value for use in calling the new img name for the tile display in the original location
+            //basically... user can combined a 9 into a 3 to change the 9 into a 3, or can combined a 4 into a 2 to change the 4 into a 2... psbly will change this later to allow combining any tile that is divisible by another tile value except for one
+
+            //if the checkCombine function results in an allowable result (not zero), then the combine logic excutes here...
+
+            //holds the resulting number from the combo (only allowable if the result is not zero... see checkCombine for the specific logic)
+            let cmbValue = checkCombine(origLoc, e.target.parentElement.id, gameboard);
+
+            //if cmbValue is anything but zero, the combine operation is allowed...
+            if (cmbValue != 0) {
+
+                //logic for combining tiles
+
+                //delete the img in the origLoc div and replace it with the new/combine value's img
+
+                //deletes the orig img
+                document.getElementById(origLoc).classList = "cell";
+                document.getElementById(origLoc).removeChild(document.getElementById(origLoc).firstChild);
+
+                //need to change picture name back to "valueCMB.png" once we have the styling for the cmb tile... background transparent, but box around it or something???
+
+                //adds the new img
+                let cmbTile = `<img src="images/${cmbValue}n.png" alt="combined tile" draggable="true" ondragstart="dragTile(event)" ontouchmove="touchDrag(e)" ontouchend="touchDrop(e)"  class="pTile" id="tile${gameTiles[origLoc[1]][origLoc[3]].id}">`;
+
+                //inserts the new tile img into the dragged tile's orig position on the gamebaord
+                document.getElementById(origLoc).insertAdjacentHTML("afterbegin", cmbTile);
+
+                //logic for combined tile styling... progressivelt gets darker as user combines several times
+                //uses the combo property of the tile object to determine the class that is assigned to the div at document.getElementBtId(origLoc)...
+                //styling for combining up to five times
+                document.getElementById(origLoc).classList = "cell " + ["one", "two", "three", "four", "five"][gameTiles[origLoc[1]][origLoc[3]].combo];
+
+
+                //in the tile objs matrix, for the obj at the origLoc, set the combined property = true and the newValue = new combined value
+                //also changes the moved property to true to prevent subsequent moving (may change this later)
+                //also changes the img path to the correct img
+                gameTiles[origLoc[1]][origLoc[3]].combined = true;
+                gameTiles[origLoc[1]][origLoc[3]].moved = true;
+                gameTiles[origLoc[1]][origLoc[3]].newValue = cmbValue;
+                gameTiles[origLoc[1]][origLoc[3]].combo++;
+                gameTiles[origLoc[1]][origLoc[3]].image = `images/${gameTiles[origLoc[1]][origLoc[3]].newValue}cmb.png`;
+
+
+                //in the tile values matrix, for the obj at origLoc, set the value to the new combined value
+                gameboard[origLoc[1]][origLoc[3]] = cmbValue;
+
+                //updating the array that holds the sum of each row's tile values
+                rowSums = rowValues(gameboard);
+
+                //displaying the row sums in the UI
+                // showSums(rowSums);
+
+                //displaying the new row total needed
+                showRemain(rowSums, goalVals);
+
+                //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+                checkSum(rowSums, gameTiles, gameboard, 6);
+
+                //update the total value saved by combining tiles
+                ttlSaved = savedValues(gameTiles);
+                console.log(`total saved: ${ttlSaved}`);
+
+                //incrementing the ttlCombined number
+                ttlCombined++;
+
+                //recalculating and updating the score
+                //recalc...
+                score = (ttlSaved + (completedRows * 350));
+                console.log(`SCORE UPDATE: ${score}`);
+
+                //updating the score disolay in the ui
+                let viewScore = `<h1>Score: ${score}</h1>`;
+                scr.removeChild(scr.children[0]);
+                scr.insertAdjacentHTML("afterbegin", viewScore);
+
+
+                //currently, combining tiles allows the discard of the currently-drawn tile... may change this... to change just remove the following code lines to the end of this block...
+
+                //removing the currTile from the current tile display so that the next tile can be shown
+                curr.removeChild(curr.firstChild);
+
+                //next random tile index chosen
+                currTileInd = drawIndex(allTiles.length);
+
+                //next tile drawn
+                currTile = allTiles[currTileInd];
+
+                //removing the drawn tile from the tile bag
+                allTiles = rmvTile(allTiles, currTileInd);
+
+                //displaying the next tile
+                dispTile();
+
+                //total number of remaining tiles to be drawn is updated
+                remaining = allTiles.length;
+                console.log(`tiles remaining to be drawn: ${remaining}`);
+
+                //updating the discarded tile count
+                //plus one here bc the currently-drawn tile is not included in the allTiles bag or the number of placed tiles
+                discarded = (tileNums - placed - randTiles - 1) - remaining;
+                console.log(`discarded: ${discarded}`);
+
+                //places random tile on board
+                // setTimeout(placeRandom, 3000);
+
+                // }
+
+
+            }
+
+
+        }
+
+
+    } else {
+
+        //if the game tile has not been moved yet...
+        if (gameTiles[origLoc[1]][origLoc[3]].moved === false) {
+
+            //and...
+            //logic to check for adjacent position. if adjacent...
+            if (checkAdjacent(origLoc, e.target.id)) {
+
+                //else... execute the tile moving logic...
+
+                //if adjacent, the drop executes...
+                e.target.appendChild(document.getElementById(movingData));
+
+                //need to change picture name back to "valueMVD.png" once we have the styling for the mvd tile... background transparent, but box around it or something???
+
+                //logic to update the picture styling
+                e.target.firstChild.src = `images/${gameTiles[origLoc[1]][origLoc[3]].value}n.png`;
+                e.target.classList.add("mvd");
+
+                //removing the background styling from the original space that the file occupied
+                document.getElementById(origLoc).classList = "cell";
+
+                //logic to update the matrices
+
+                //tile values matrix updated
+                gameboard = updateMatx(gameboard, origLoc, e.target.id, 0);
+
+                //logic to update the .moved property in the tile object in the gameTiles matrix
+                gameTiles[origLoc[1]][origLoc[3]].moved = true;
+
+                //logic to update the image property in the tile object in the gameTiles matrix
+                gameTiles[origLoc[1]][origLoc[3]].image = `images/${gameTiles[origLoc[1]][origLoc[3]].value}mvd.png`;
+
+                //tile objects matrix updated
+                gameTiles = updateMatx(gameTiles, origLoc, e.target.id, undefined);
+
+                //updating the array that holds the sum of each row's tile values
+                rowSums = rowValues(gameboard);
+
+                //displaying the row sums in the UI
+                // showSums(rowSums);
+
+                //displaying the new row total needed
+                showRemain(rowSums, goalVals);
+
+                //incrementing the ttl moved variable
+                moves++;
+
+                //check for full row that adds up to row goal value, to style it with special style for 3 seconds, then clear the row so that the user can begin filling it again
+                checkSum(rowSums, gameTiles, gameboard, 6);
+
+                //bc moving or combining a tile results in the currently-drawn tile to be discarded, the currently-drawn tile is removed and the next tile is drawn...
+
+                //removing the currTile from the current tile display so that the next tile can be shown
+                curr.removeChild(curr.firstChild);
+
+                //next random tile index chosen
+                currTileInd = drawIndex(allTiles.length);
+
+                //next tile drawn
+                currTile = allTiles[currTileInd];
+
+                //removing the drawn tile from the tile bag
+                allTiles = rmvTile(allTiles, currTileInd);
+
+                //displaying the next tile
+                dispTile();
+
+                //total number of remaining tiles to be drawn is updated
+                remaining = allTiles.length;
+                console.log(`tiles remaining to be drawn: ${remaining}`);
+
+                //updating the discarded tile count
+                //plus one here bc the currently-drawn tile is not included in the allTiles bag or the number of placed tiles
+                discarded = (tileNums - placed - randTiles - 1) - remaining;
+                console.log(`discarded: ${discarded}`);
+
+                //disabled for now... too many tiles with this
+                //places random tile on board
+                // setTimeout(placeRandom, 3000);
+
+            }
+
+
+        }
+
+    }
+
+
+
+
+};
+
+///////end touch functions!
+
+
 //holds the original location of the tile being moved (string)
 //string bc it comes from the dragTile(e) function, taking the location from id of the parent div of the img being moved
 let origLoc;
@@ -1794,7 +2048,7 @@ function dropTile(e) {
                 //need to change picture name back to "valueCMB.png" once we have the styling for the cmb tile... background transparent, but box around it or something???
 
                 //adds the new img
-                let cmbTile = `<img src="images/${cmbValue}n.png" alt="combined tile" draggable="true" ondragstart="dragTile(event)" class="pTile" id="tile${gameTiles[origLoc[1]][origLoc[3]].id}">`;
+                let cmbTile = `<img src="images/${cmbValue}n.png" alt="combined tile" draggable="true" ondragstart="dragTile(event)" ontouchmove="touchDrag(e)" ontouchend="touchDrop(e)" class="pTile" id="tile${gameTiles[origLoc[1]][origLoc[3]].id}">`;
 
                 //inserts the new tile img into the dragged tile's orig position on the gamebaord
                 document.getElementById(origLoc).insertAdjacentHTML("afterbegin", cmbTile);
