@@ -192,6 +192,7 @@ header h1 {
 .pTile {
     width: 77px;
     height: 77px;
+    -webkit-user-drag: element;
 
 }
 
@@ -719,6 +720,13 @@ button:disabled {
         width: 45px;
         height: 45px;
     }
+
+    .cell img {
+        height: 45px;
+        width: 45px;
+
+    }
+
 
     .rowNeeded {
         width: 70px;
