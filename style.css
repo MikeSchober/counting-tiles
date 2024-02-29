@@ -192,6 +192,7 @@ header h1 {
 .pTile {
     width: 77px;
     height: 77px;
+    -webkit-user-drag: element;
 
 }
 
@@ -478,7 +479,7 @@ button:disabled {
     justify-content: center;
     align-items: center;
     color: #efe4b0;
-    font-size: 35px;
+    font-size: 1.5rem;
 
 
 }
@@ -590,6 +591,9 @@ button:disabled {
 
     }
 
+    .cplt {
+        font-size: 1.3rem;
+    }
 
 }
 
@@ -720,6 +724,13 @@ button:disabled {
         height: 45px;
     }
 
+    .cell img {
+        height: 45px;
+        width: 45px;
+
+    }
+
+
     .rowNeeded {
         width: 50px;
         height: 45px;
@@ -758,4 +769,11 @@ button:disabled {
         width: 300px;
 
     }
+
+
+    .cplt {
+        font-size: 1.3rem;
+    }
+
+
 }
