@@ -673,6 +673,9 @@ button:disabled {
 
     }
 
+    button {
+        font-size: 0.8rem;
+    }
 
     header {
         height: auto;
