@@ -479,7 +479,7 @@ button:disabled {
     justify-content: center;
     align-items: center;
     color: #efe4b0;
-    font-size: 35px;
+    font-size: 1.5rem;
 
 
 }
@@ -591,6 +591,9 @@ button:disabled {
 
     }
 
+    .cplt {
+        font-size: 1.3rem;
+    }
 
 }
 
@@ -766,4 +769,11 @@ button:disabled {
         width: 300px;
 
     }
+
+
+    .cplt {
+        font-size: 1.3rem;
+    }
+
+
 }

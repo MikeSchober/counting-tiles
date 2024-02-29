@@ -559,7 +559,7 @@ function toSelect(event) {
 
 
     }
-    else if (element.tagName === 'IMG' && element.className === 'pTile' && sel === false && window.outerWidth < 950) {
+    else if (element.tagName === 'IMG' && element.className === 'pTile' && sel === false && window.outerWidth < 1400) {
 
         //selecting tile for safari
         sel = true;
@@ -576,7 +576,7 @@ function toSelect(event) {
         origEl = element.id;
 
 
-    } else if (sel === true && window.outerWidth < 950) {
+    } else if (sel === true && window.outerWidth < 1400) {
 
         //placing tile for safari
 
