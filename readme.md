@@ -19,6 +19,8 @@ I love writing JavaScript logic, and this project has been so much fun. It's sim
 ## Updates
 This is version one of the game, as I think I have finally achieved a good balance between the tile value distribution, the random tile placement logic, and the overall gameplay structure. I am currently working on several projects, but suggestions and improvements here are welcome! Fork the repo and open a PR, requesting to pull into `main`!
 
+See my [Contributing Guidelines](https://github.com/MikeSchober/counting-tiles/blob/main/CONTRIBUTING.md)!
+
 ## Licensing
 The font used in the tiles and in some of the labels in the gameplay UI is a font called "Acme". Copyright (c) 2011, Juan Pablo del Peral. It is licensed under the SIL Open Font License, which can be found in the accompanying "fontLicense.txt" file in this repo. 
 
