@@ -19,6 +19,7 @@
         body {
 
             margin-top: 10px;
+            font-size: 1.2rem;
 
         }
 
@@ -82,13 +83,17 @@
 
     <h3>PLACING TILES</h3>
     <p>The currently-drawn tile appears adjacent to the gameboard. This tile can be placed in any open space on the
-        board. Once placed, a new tile is drawn.
+        board. Once placed, a new tile is drawn. To place a tile, click or tap an open space on the board.
     </p>
 
     <h3>MOVING TILES</h3>
-    <p>Tiles can be moved to an adjacent square (not diagonally), but each tile can only be moved once. A moved tile can
+    <p>Tiles can be moved to up, down, left, or right (not diagonally), but each tile can only be moved once. A moved
+        tile can
         be subsequently combined, but it cannot be moved again. When a tile is
-        moved, the currently-drawn tile is automatically discarded and a new tile is drawn.</p>
+        moved, the currently-drawn tile is automatically discarded and a new tile is drawn. To move a tile on desktop or
+        laptop, click and drag, dropping in the open space. If you are on a mobile device, click the tile that you would
+        like to move (this will highlight it with a blue outline), and then click in the open space in which you would
+        like it to be placed.</p>
 
     <h3>COMBINING TILES</h3>
     <p>Tiles can be combined with adjacent tiles of lower values by which they are evenly divisible. As a result
@@ -97,8 +102,11 @@
         the quotient value of 2. Once tiles are combined, they cannot be moved, but tiles can be combined without limit.
         As another example, tile A has a value of 8 and tile B has a value of 2. Tile A can be combined with tile B
         twice. The 8 becomes a 4, then, after combining again, the 4 becomes a 2. Each time a tile is combined, the
-        currently-drawn tile is automatically discarded and a new tile is drawn. Tiles of sharing the same value cannot
-        be combined, and a tile cannot be combined with a tile holding the value of one.</p>
+        currently-drawn tile is automatically discarded and a new tile is drawn. Tiles that share the same value cannot
+        be combined, and a tile cannot be combined with a tile holding the value of one. To combine a tile on desktop or
+        laptop, click and drag, dropping the tile on top of the tile with which you would like it to be combined. If you
+        are on a mobile device, click the tile that you would
+        like to combine (this will highlight it with a blue outline), and then click on the combining tile.</p>
 
     <h3>COMPLETING A ROW</h3>
     <p>For a row to be completed, it must be completely filled and the sum of the tile values in the row must be exactly
