@@ -1,15 +1,10 @@
 'use strict';
 
-//version 1.0.0
-
-//touch
+//version 1.1.0
+//added logic for touch compatibility on safari
 
 ///////
 //GLOBAL VARS//
-
-//holds playing status (bool)
-//can likely remove... not using
-// let game = true;
 
 //holds current score (number)
 //starts negative to offset the automatic updating of the random placing function at game initiation
@@ -2572,35 +2567,16 @@ timeframe = 25;
 
 
 
-//progress notes as of 1/14/24...
-
-//CL 1760 and 1652... need to change back to the mvd and cmb image names once we have the styling nailed down for them... currently all using the valueN.png images
-
-//finished styling to completed row!!!
-//---need to add array of various sayings to be displayed when user completes row (maybe 40-50 says that eventually repeat???)
-//---template literal used so that we can insert different index of the array each time
-
-//need to create the selection for challenge mode or casual mode in the game start modal
-
-//created all tiles with transparent background.---done!!!
-//need to decide on styling to moved and combined tiles
-
-//need to update rules and the readme
 
 
-//need to refactor whole code base... start with game initiation. can put much of it into a function which can be called at initial game init and also at game reset
-
-//latest update... 12/21/23
-//updated logic to include randomly-placed tiles each time the user manually places a tile. The user can currently move and combine tiles without a random tile being placed.
-//had random tiles being placed every 25 seconds but it was too many tiles, too quickly. if doing random tiles at intervals, need to install button to allow the user to precipitate the placement at lulls in the game. also need to play with board size and number distribution for this to work. work in progress...
 
 
-///later... for now just total score
-//----need to write logic for game-end point summation and summary
-//---game end stats... # completed row, # placed tiles, # discarded tiles, # tiles combined, # tiles moved, total reduction in points by combining tiles, avg drawn tile value vs distribution avg, # of bonuses used, total points!
+
+
 
 
 //-------------------------------------------------------------
+//old notes...
 //finished tasks...
 //tiles created and UI working as designed---done!
 //need to write logic for tile counts in the extra info section---done!!!
@@ -2669,4 +2645,14 @@ timeframe = 25;
 //after consideration, plan is to build the game to that there is seemingly endless scoring opportunity. will be more interesting than just a clear, finite scoring potential.
 
 
-//may need to adjust the tile disribution!!! seems very hard with my initial choice...
+//CL 1760 and 1652... need to change back to the mvd and cmb image names once we have the styling nailed down for them... currently all using the valueN.png images---decided to leave as is
+
+
+//finished styling to completed row!!!
+
+//need to create the selection for challenge mode or casual mode in the game start modal---done!
+
+//created all tiles with transparent background.---done!!!
+
+//----need to write logic for game-end point summation and summary---done!
+//---game end stats... # completed row, # placed tiles, # discarded tiles, # tiles combined, # tiles moved, total reduction in points by combining tiles, avg drawn tile value vs distribution avg, # of bonuses used, total points!---done!!!
